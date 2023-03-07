@@ -1,5 +1,330 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html lang="en">
 
-{% include {{ site.theme-home }} %}
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170646573-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170646573-1');
+  </script>
+
+  <meta name="title" content="Saravana Kumar Portfolio">
+  <meta name="description" content="Personal portfolio of Saravana Kumar">
+  <meta name="keywords" content="Saravana Kumar, portfolio, Network Software Engineer, Devops, Cloud">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="15 days">
+  <meta name="author" content="Saravana Kumar">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Neucha&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/devicon-master/devicon.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
+    integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="style.css">
+  <title>Saravana Kumar Portfolio</title>
+</head>
+
+<body>
+
+
+  <div class="sticky-top">
+    <nav class="navbar navbar-light bg-light justify-content-center">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#"><img data-tippy-content="Home" src="img/hand.png" alt="Home" width="50"
+              height="50"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#projects"><img data-tippy-content="Projects"
+              src="img/code-school-symbol-sketch.png" alt="porjects" width="50" height="50"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact"><img data-tippy-content="Contact"
+              src="img/contact-sketched-social-symbol.png" alt="contact" width="50" height="50"></a>
+        </li>
+      </ul>
+    </nav>
+    <wired-divider elevation="2"></wired-divider>
+  </div>
+
+
+
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-2">
+
+      <div class="col align-self-center order-2 order-md-1 uppery">
+        <h1 class="tags"><strong>&lt;h1></strong></h1>
+        <h1 class="pl-5">Hi,<br>I'm Saravana<br>Network Software Engineer</h1>
+        <h1 class="tags"><strong>&lt;h1></strong></h1>
+
+        <p class="tags"><strong>&lt;p></strong></p>
+        <p class="pl-5">
+          Developing some independent games, working on cloud DevOps projects, and providing technical documentation for platforms like GCP, Azure, and Aviatrix. I enjoy entering contests on sites like codechef and codeforces. If you're interested in seeing what I'm working on right now, visit my github/thesaravanakumar page. Have a good day.
+        </p>
+        <p class="tags"><strong>&lt;p></strong></p>
+      </div> <!-- Left col -->
+
+      <div class="col order-1 order-md-2 text-center">
+        <wired-image class="m-4" elevation="10" src="img/mp.jpg"></wired-image>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item grow"><a class="no-decorations" target="_blank"
+              href="https://github.com/thesaravanakumar"><img src="img/octocat.png" alt="github logo" width="40"
+                height="40">&nbsp;&nbsp;&nbsp;GitHub</a></li>
+          <li class="list-group-item grow"><a class="no-decorations" target="_blank"
+              href="https://www.linkedin.com/in/thesaravanakumar/"><img src="img/linkedin.png" alt="linkedin logo" width="40"
+                height="40">&nbsp;&nbsp;&nbsp;LinkedIn</a></li>
+          <li class="list-group-item grow"><a class="no-decorations" target="_blank" href="cv.pdf"><img
+                src="img/resume.png" alt="linkedin logo" width="40" height="40">&nbsp;&nbsp;&nbsp;My CV</a></li>
+          </a></li>
+        </ul>
+      </div> <!-- Right col -->
+
+    </div> <!-- Row -->
+  </div> <!-- Container -->
+
+
+  <br id="projects">
+  <wired-divider elevation="4"></wired-divider>
+  <br>
+
+  <div class="container">
+    <h1 class="mb-4 tags"><strong>&lt;h1></strong></h1>
+    <h1 class="pl-5">Projects</h1>
+    <h1 class="mt-4 mb-5 tags"><strong>&lt;h1></strong></h1>
+
+
+    <div class="row row-cols-1 row-cols-md-2">
+
+      <div class="col mb-4">
+        <wired-card class="h-100" elevation="9">
+          <h2 class="text-center m-2"><strong>Pomodoro-Timer 🍅</strong> </h2>
+          <wired-image class="m-1" elevation="2" src="img/pomodoro gif.gif"></wired-image>
+          <p class="p-3">
+            A mobile resoponsive pomodoro timer here to help you be more productive.
+          </p>
+          <h2 class="m-4 text-center"><strong><u>Tecnology stack</u></strong></h2>
+          <ul class="nav justify-content-center align-self-center">
+            <li class="nav-item">
+              <i data-tippy-content="HTML5" class="devicon-html5-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="CSS3" class="devicon-css3-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JavaScript" class="devicon-javascript-plain"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="Bootstrap" class="devicon-bootstrap-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JQuery" class="devicon-jquery-plain-wordmark"></i>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-around text-center">
+            <a class="no-decorations" target="_blank" href="https://tiapnn.github.io/Pomodoro-Timer">
+              <wired-button class="mt-4 mb-2 grow">View project</wired-button>
+            </a>
+            <a class="no-decorations" target="_blank" href="https://github.com/tiapnn/Pomodoro-Timer">
+              <wired-button class="mt-4 mb-2 grow">View repo</wired-button>
+            </a>
+          </div>
+
+        </wired-card>
+      </div>
+
+      <div class="col mb-4">
+        <wired-card class="h-100" elevation="9">
+          <h2 class="text-center m-2"><strong>Stoic Quotes Generator 📜</strong> </h2>
+          <wired-image class="m-1" elevation="2" src="img/stoic gif.gif"></wired-image>
+          <p class="p-3">
+            A stoic quotes generator to always keep you inspired.
+          </p>
+          <h2 class="m-4 text-center"><strong><u>Tecnology stack</u></strong></h2>
+          <ul class="nav justify-content-center align-self-center">
+            <li class="nav-item">
+              <i data-tippy-content="HTML5" class="devicon-html5-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="CSS3" class="devicon-css3-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JavaScript" class="devicon-javascript-plain"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="Bootstrap" class="devicon-bootstrap-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JQuery" class="devicon-jquery-plain-wordmark"></i>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-around text-center">
+            <a class="no-decorations" target="_blank" href="https://tiapnn.github.io/Stoic-Quotes-Generator">
+              <wired-button class="mt-4 mb-2 grow">View project</wired-button>
+            </a>
+            <a class="no-decorations" target="_blank" href="https://github.com/tiapnn/Stoic-Quotes-Generator">
+              <wired-button class="mt-4 mb-2 grow">View repo</wired-button>
+            </a>
+          </div>
+
+        </wired-card>
+      </div>
+
+      <div class="col mb-4">
+        <wired-card class="h-100" elevation="9">
+          <h2 class="text-center m-2"><strong>JS Calculator ➗</strong> </h2>
+          <wired-image class="m-1" elevation="2" src="img/calc gif.gif"></wired-image>
+          <p class="p-3">
+            A simple yet elegant Javascript calulator - mobile responsive.
+          </p>
+          <h2 class="m-4 text-center"><strong><u>Tecnology stack</u></strong></h2>
+          <ul class="nav justify-content-center align-self-center">
+            <li class="nav-item">
+              <i data-tippy-content="HTML5" class="devicon-html5-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="CSS3" class="devicon-css3-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JavaScript" class="devicon-javascript-plain"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="Bootstrap" class="devicon-bootstrap-plain-wordmark"></i>
+            </li>
+            <li class="nav-item">
+              <i data-tippy-content="JQuery" class="devicon-jquery-plain-wordmark"></i>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-around text-center">
+            <a class="no-decorations" target="_blank" href="https://tiapnn.github.io/JS-Calculator/">
+              <wired-button class="mt-4 mb-2 grow">View project</wired-button>
+            </a>
+            <a class="no-decorations" target="_blank" href="https://github.com/tiapnn/JS-Calculator">
+              <wired-button class="mt-4 mb-2 grow">View repo</wired-button>
+            </a>
+          </div>
+
+        </wired-card>
+      </div>
+
+    </div>
+  </div> <!-- Container -->
+
+  <br id="contact">
+  <wired-divider elevation="4"></wired-divider>
+  <br>
+
+  <div class="container">
+    <h1 class="mb-4 tags"><strong>&lt;h1></strong></h1>
+    <h1 class="pl-5">Contact</h1>
+    <h1 class="mt-4 mb-5 tags"><strong>&lt;h1></strong></h1>
+
+    <!-- Contact Form -->
+    <div class="row row-cols-1 row-cols-md-2">
+      <div class="col align-self-center order-2 order-md-1 uppery">
+        <form action="javascript:void(0);">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="name">Name</label>
+              <input type="text" class="form-control inputte" id="name" placeholder="Enter name" name="name"
+                pattern='[A-Za-z\\\s]*' required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="email">Email</label>
+              <input type="email" class="form-control inputte" id="email" placeholder="Enter email" name="email"
+                required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" class="form-control inputte" id="subject" placeholder="Enter subject" name="subject"
+              pattern='[0-9A-Za-z\\\s]*'>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control h-100 inputte" id="message" rows="4" placeholder="Enter message" type="text"
+              name="message" required></textarea>
+          </div>
+          <button id="sendForm" type="submit" class="text-center d-flex justify-content-center border-0 m-auto grow">
+            <wired-button class="text-center d-flex justify-content-center m-auto ">
+              <wired-spinner id="spinner" spinning="true" duration="1500"></wired-spinner>
+              <div id="confmsg" class="text-center d-flex justify-content-center">
+                Submit form
+              </div>
+              <div>
+                <img class="m-2" id="tick" src="img/hand.png" width="30" height="30">
+              </div>
+            </wired-button>
+          </button>
+        </form>
+      </div>
+      <!-- End Contact Form -->
+
+
+
+      <div class="col align-self-center order-1 order-md-2 mb-5">
+        <h1 class="text-center"><strong>Saravana Kumar</strong></h1>
+        <ul class="list-group list-group-flush text-center">
+          <li class="list-group-item grow"><a class="no-decorations"><img src="img/sketch.png" alt="location logo"
+                width="40" height="40">&nbsp;&nbsp;&nbsp;Tamilnadu, India</a></li>
+          <li class="list-group-item grow"><a class="no-decorations" href="tel:+34691969203"><img src="img/viber.png"
+                alt="mobile logo" width="40" height="40">&nbsp;&nbsp;&nbsp;+91 88258XXXXX (contact me for last 5 digits)</a></li>
+          <li class="list-group-item grow"><a class="no-decorations" href="mailto:tiapnn@yahoo.it"><img
+                src="img/mail.png" alt="mail logo" width="40" height="40">&nbsp;&nbsp;&nbsp;saravana.k.manimaran@gmail.com</a></li>
+          </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </div> <!-- End Container -->
+
+  <br>
+  <wired-divider elevation="2"></wired-divider>
+
+  <!-- Footer -->
+  <nav id="footer" class="navbar navbar-light bg-light justify-content-start">
+    <a class="grow navbar-brand ml-5" target="_blank" href="https://github.com/thesaravanakumar">
+      <img src="img/octocat.png" alt="github logo" width="30" height="30">
+    </a>
+    <a class="grow navbar-brand ml-5" target="_blank" href="https://www.linkedin.com/in/thesaravanakumar/">
+      <img src="img/linkedin.png" alt="linkedin logo" width="30" height="30">
+    </a>
+    <div class="footer-quote ml-auto">
+      "Code is like humor. When you have to explain it, it's bad.”
+    </div>
+  </nav>
+  <!-- End footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/wired-elements/lib/wired-elements-iife.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+  <script src="scripts.js"></script>
+</body>
+
+</html>
