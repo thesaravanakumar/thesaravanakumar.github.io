@@ -1,6 +1,6 @@
 tippy('[data-tippy-content]');
 
-var serverBEnd = 'https://mattia-penna-backend-services.000webhostapp.com/services/form.php'; //000webhostapp.com
+var serverBEnd = 'https://formspree.io/f/mlekwvnz';
 
 $('#sendForm').click(() => {
     if (!$('input:invalid').length && !$('textarea:invalid').length) {
@@ -58,25 +58,5 @@ $('#sendForm').click(() => {
                 console.log(error);
                 console.groupEnd()
             })
-
-        
-
-
-
-
-
-
-
-
-
     }
-
 })
-
-
-
-
-
-
-
-
