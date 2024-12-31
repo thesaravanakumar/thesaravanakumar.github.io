@@ -1,0 +1,33 @@
+import { ArticleLayout } from '@/components/articles/article-layout'
+import meta from '@/utils/meta'
+
+import github from './github.png'
+
+export const article = {
+  title: 'Github Readme',
+  description: 'Where the code is clean, the coffee is strong. Welcome to my GitHub, where the magic happens!',
+  date: '2023-07-25',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    images: meta.website.url + '/articles/og?title=' + encodeURI(article.title),
+    type: 'article',
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+<p align="center">
+<img 
+  src={github.src} 
+  alt="github"
+/>
+</p>
+
+go to [github.com/thesaravanakumar](https://github.com/thesaravanakumar)

@@ -1,0 +1,34 @@
+import { WorkLayout } from '@/components/work/work-layout'
+import meta from '@/utils/meta'
+
+import wip from './wip.jpg'
+
+export const work = {
+  title: 'Coming Soon',
+  description:
+    'Check back in March 25',
+  image: wip.src,
+  createdAt: '2025-01-01',
+  updatedAt: '2025-01-01',
+  year: 2025,
+  technologies: [],
+  details:
+    '',
+  client: {
+    name: '',
+    website: '',
+  },
+}
+
+export const metadata = {
+  title: work.title,
+  description: work.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: work.title,
+    description: work.description,
+    type: 'article',
+  },
+}
+
+export default (props) => <WorkLayout work={work} {...props} />

@@ -1,0 +1,114 @@
+import { ArticleLayout } from '@/components/articles/article-layout'
+import meta from '@/utils/meta'
+
+import foobar1 from './foobar1.png'
+import foobar2 from './foobar2.png'
+
+
+export const article = {
+  title: 'Google Foobar Journal',
+  description: 'Embarking on a secretive journey through Google Foobar, where only the bold and brilliant survive!',
+  date: '2022-11-12',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    images: meta.website.url + '/articles/og?title=' + encodeURI(article.title),
+    type: 'article',
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+<br />
+
+<p align="center">
+<img 
+  src={foobar1.src} 
+  alt="foobar1"
+/>
+</p>
+
+
+The <es><strong>Foobar</strong></es> challenge is a Google secret hiring process for top programmers and engineers all over the world. And it is well known that this approach has resulted in the hiring of several Google developers.
+The challenge is divided into <es><strong>five</strong></es> levels with a total of <es><strong>nine</strong></es> questions, with each level rising in <es><strong>complexity</strong></es>.  
+
+
+<p align="center"> 
+After selecting the <es><strong>I want to play</strong></es> option, you will be sent to Foobar's website, which features a <es><strong>Unix</strong></es>-like shell interface with common Unix commands such as this.
+</p>
+
+<p align="center"> 
+In each challenge, Google provides <es><strong>2-3</strong></es> out of the <es><strong>5-10</strong></es> total test cases as examples. The rest of them are hidden. Exclusive to <es><strong>Python</strong></es> and <es><strong>Java</strong></es>.
+</p>
+
+## **Journal**
+- Success! You've managed to infiltrate Commander Lambda's evil organization, and finally earned yourself an entry-level position as a Minion on their space station. From here, you just might be able to subvert Commander Lambda's plans to use the LAMBCHOP doomsday device to destroy Bunny Planet. Problem is, Minions are the lowest of the low in the Lambda hierarchy. Better buck up and get working, or you'll never make it to the top...
+- Next time Bunny HQ needs someone to infiltrate a space station to rescue bunny workers, you're going to tell them to make sure 'stay up for 48 hours straight scrubbing toilets' is part of the job description. It's only fair to warn people, after all.
+- You survived a week in Commander Lambda's organization, and you even managed to get yourself promoted. Hooray! Henchmen still don't have the kind of security access you'll need to take down Commander Lambda, though, so you'd better keep working. Chop chop!
+- You got the bunny trainers to teach you a card game today, it's called Fizzbin. It's kind of pointless, but they seem to like it and it helps you pass the time while you work your way up to Commander Lambda's inner circle.
+- Rumor has it the bunny trainers are inexplicably fond of bananas. You're an apple person yourself, but you file the information away for future reference. You never know when you might need to bribe a trainer (or three)...
+- Awesome! Commander Lambda was so impressed by your efforts that you've been promoted to personal assistant. You'll be helping the Commander directly, which means you'll have access to all of Lambda's files -- including the ones on the LAMBCHOP doomsday device. This is the chance you've been waiting for. Can you use your new access to finally topple Commander Lambda's evil empire?
+- Who the heck puts clover and coffee creamer in their tea? Commander Lambda, apparently. When you signed up to infiltrate the organization you didn't think you'd get such an up-close and personal look at these more... unusual tastes.
+- There are a lot of difficult things about being undercover as Commander Lambda's personal assistant, but you have to say, the personal spa and private hot cocoa bar are pretty awesome.
+- One of these days you're going to manage to glimpse Commander Lambda's password over their shoulder. But the Commander is very careful about security and you haven't managed it yet...
+- Excellent! You've destroyed Commander Lambda's doomsday device and saved Bunny Planet! But there's one small problem: the LAMBCHOP was a wool-y important part of the space station, and when you blew it up, you triggered a chain reaction that's tearing the station apart. Can you rescue the bunny workers and escape before the entire thing explodes?
+- There are a lot of difficult things about being undercover as Commander Lambda's personal assistant, but you have to say, the personal spa and private hot cocoa bar are pretty awesome.
+- For a world-destroying despot with a penchant for making space-station-sized doomsday devices, Commander Lambda sure has good taste in office furniture. As a personal assistant, you have the latest in standing desk and ergonomic chair technology, and it sure makes a difference!
+- Oh no! You escaped Commander Lambda's exploding space station -- but so did the Commander, and Lambda is definitely not happy with you. Lambda is chasing you in a heavily-armed starfighter, while you and the bunny workers are stuck in these lumbering escape pods. It'll take all your wits and cleverness to escape such a hare-y situation, so you'd better hop to it!
+- It's not regulation, but you think if you can bypass the compressor, you can squeeze a few extra bursts of speed out of this escape pod.
+- With one last roar of the escape pod's engines, you and your bunny companions jump to lightspeed. Congratulations! You've destroyed the LAMBCHOP, relieved the bunnies, gotten Commander Lambda off your tail, and saved the galaxy. Time for a little rest and relaxation back on Bunny Planet. Pat yourself on the back -- you've earned it!
+
+<br />
+
+<p align="center">
+<img 
+  src={foobar2.src} 
+  alt="foobar2"
+/>
+</p>
+
+## **Level 1**
+- Braille Translation
+- I Love Lance & Janice
+- Minion Task Scheduling
+- Minor Labor Shifts
+- Prison Labor Dodgers
+- Re-ID
+
+## **Level 2**
+- Bunny Prisoner Locating
+- Do not Get Volunteered
+- Elevator Maintenance
+- En Route Salute
+- Hey, I Already Did That!
+- Iron Flux Relabeling
+- Lovely Lucky Lambs
+- Numbers Station Coded Messages
+- Power Hungry
+
+## **Level 3**
+- Bomb, Baby
+- Doomsday Fuel
+- Find the Access Codes
+- Fuel Injection Perfection
+- Prepare The Bunnies Escape
+- Queue To Do
+- The Grandest Staircase Of Them All
+
+## **Level 4**
+- Bringing a Gun to a Guard Fight
+- Distract the Guards
+- Escape Pods
+- Free the Bunny Prisoners
+- Running with Bunnies
+
+## **Level 5**
+- Disorderly Escape
+- Dodge The Lasers
+- Expanding Nebula

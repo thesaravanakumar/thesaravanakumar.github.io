@@ -1,0 +1,812 @@
+import { ArticleLayout } from '@/components/articles/article-layout'
+import meta from '@/utils/meta'
+
+
+export const article = {
+  title: 'Perl Scripting',
+  description: 'A blast from the past for wrangling code, diving into text, and getting things done with Perl—because sometimes, old school is still cool.',
+  date: '2024-08-28',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    images: meta.website.url + '/articles/og?title=' + encodeURI(article.title),
+    type: 'article',
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+- A dynamic interpreted scripting language famous for text-processing abilities.
+- Developed in **1987** by **Larry Wall**.
+- When someone says perl usually it's version 5 (version 6 is called RAKU).
+- Offen reffered to as ```glue language``` (networking, databases, automation, admin scripts, string parsing).
+- Commonly used to write CGI (Common Gateway Interface) scripts that allows webservers to communicate to external programs.
+- Has powerful ```string parsing``` abilities.
+
+#### Design principle of Perl:
+> Things that are different should look different
+
+```pl
+#!/usr/bin/perl
+
+# scalar
+$hello = "hi mom";
+$num = 1;
+
+# array
+@nums =(10,20,30);
+@nums[1];
+
+# Hash
+%friends = ('Larry', 67, 'Ken', 79);
+%friends{'Larry'};
+
+# conditional
+if(5>10){
+   print "hi";
+}
+print "hi" if 5>10;
+$result = (5>10)? "hi" : "bye";
+
+# Functions are defined as sub routines
+sub perlwillbefuntheysaid {
+   print "This is a function";
+   my($n1,$n2) = @_; #any arguments passed to the function can be accessed by @_
+   print $n1 + $n2;
+}
+   
+# Regex are built-in and =~ can easily match a string
+if($text =~ /cool/)
+
+# Autovivification (bring missing data to life)
+@counter = (1..10);
+$counter[20]++;
+$len = @counter;
+print $len;
+```
+
+---
+```pl
+# e for execute
+perl -e 'print "hello\n"' 
+# E for enabling features "say" is for adding new line
+perl -E 'say "hello"'
+# <> - taking input, uc - upper case
+perl -E 'while(<>) { say uc $_}'
+hello
+HELLO
+```
+#### File Structure
+```pl
+#!/usr/bin/env perl
+
+use strict; # pragmas
+use warnings;
+
+my $test = "random";
+print $test . "Hello world!"; #concatinate
+
+1; # returns true (If not used it will throw a warning if you are using a script inside a script)
+```
+Scalars - single unit of data, they can hold one of undefined, number, string or reference
+```pl
+$num = 1;
+$string = "hello"
+print $string . $num . "\n";
+hello1\n
+```
+#### Debugging
+```pl
+use strict;
+use warnings;
+use Data::Dumper;
+my $scalar = 32;
+my @array = qw/string1 string2/;
+my %hash = ('Larry', 67, 'Ken', 79);
+print Dumper($scalar); # VAR1 = 32;
+print Dumper(@array); # $VAR1 = 'string1'; $VAR2 = 'string2';
+print Dumper(%hash); # $VAR1 = 'Larry'; $VAR2 = 67; $VAR3 = 'Ken'; $VAR4 = 79;
+use Data::Dumper;
+```
+#### Arrays
+```pl
+my @test = qw/one two three/; # qw means quoted words
+VAR1 = 'one' VAR2 = 'two' VAR3 = 'three'
+print Dumper($test[-1]); # last item in array
+$size = @test # size of the array
+$last_index = $#test; #last index in an array
+@test = (11 .. 30); # creates 11 to 30 array
+print Dumper( @test[2 .. 3]); # prints the index value
+push @test, 20 # push at end
+pop @test # remove last element
+shift @test # removes first element
+unshift @test, 20 # adds element in front
+
+#sort
+my @test = qw/ h o p m l a b c /;
+@test = sort @test; # sorts a string too
+my test = (4,2,10,22,30);
+@test = sort @test;
+10, 2, 22, 30, 4 # not good becaue it sorts based on string context
+@test = sort {$a <=> $b} @test;
+```
+#### Hashes
+- Key value pair.
+- Order is not preserved, never!
+- Keys are unique so values are overwrittern if there is same key name.
+```pl
+my %map = (
+   a => 20,
+   b => "hello",
+   c => 11.22,
+);
+$map{d} = 10;
+print Dumper( $map{c} ); # 11.22
+
+# merge two maps
+my %map2 = (
+   e => 1,
+   %map
+);
+
+# access slice of hashes using array
+print Dumper (@map{'a','b'});
+@arrays = keys %map; #returns all the keys
+$size = keys %map; # returns the size of the hash
+my %map = {
+    a => 20,
+    b => 'hello',
+    d => undef, # not tuthy value
+}
+my $exists = exists $map{d} ? "yes" : "no" ; # yes (key exits or not)
+my $exists = $map{d} ? "yes" : "no" ; # no (key exits but we are checking in a truthy context)
+delete $map{c}; # deletes an item from a hash
+```
+#### References
+- A location in a memory that points to an another data structure.
+- Allows you to construct nested data structures.
+
+> pass by value = you are duplicating the value in memory
+> pass by reference = you are passing the location of the data structure in your memory
+
+```pl
+my %hash = (a=>1,b=>2);
+my @array = qw/string1 string2/;
+my $scalar = 32;
+print \%hash # HASH(0x7fee57825820)
+
+# Dereference
+my @array = qw/string1 string2/;
+my $ref1 = \@array;
+push $ref1, "new"; # won't work
+push $ref1->@*,"new"; # ->@ dereference to array so you can push new items by reference of an array
+
+# References
+# Scalar reference
+my $scalar = 32;
+print Dumper(\$scalar);
+--------------------
+VAR1 = \32;
+--------------------
+# Array Reference
+print Dumper(\@array);
+--------------------
+Instead of printing 
+VAR1 = 'string1';
+VAR2 = 'string2';
+It will print
+VAR1= [
+      'string1',
+      'stinrg2'
+];
+--------------------
+# Hash reference
+my %hash = (a =>1, b=>2);
+print Dumper(\%hash);
+--------------------
+VAR1 = {
+      'a' => 1,
+      'b' => 2
+};
+--------------------
+
+# Create a reference like we create an array or hash, use the syntax that printed out in data dumper above!
+
+my $hash_ref = {
+   a => 1,
+   b => 2,
+};
+my $array_ref = [ 1,2,3 ];
+# To access an element in a reference use ->
+print Dumper($hash_ref->{a}); # dereferences VAR1 = 1;
+print Dumper($array_ref->[1]); # dereferences index number 1, prints VAR1 = 2;
+print Dumper($hash_ref->%*); dereference a whole hash use %
+print Dumper(@$array_ref); another way for dereferencing
+my $hash_ref = {
+   a => 1,
+   b => 2,
+   c => { # nested!
+      new => 1,
+      new2 => 2,
+      deep = [1,2]
+   }
+}; 
+print Dumper($hash_ref->{c}->{deep}->[0]); # 2
+delete $hash_ref->{b};
+print Dumper(values $hash_ref->%*); # dereference
+```
+```
+ref
+print Dumper (ref ($hash_ref) );
+VAR1 = 'HASH; # shows what references you are working on...
+```
+#### Subroutines
+- Same as Function.
+- A group of statements encapsulated in a single function to perform a specific task.
+- Perl is going to return the last value you worked with in a function so no need to ```return```.
+```pl
+sub test {
+   my $name = $_[0]; # access the items in the array
+   (or)
+   my @args = @_;     # all arguments are storend in @_
+   my $name = $args[0]; # gets the first item
+   (or)
+   my $name = shift @_;
+   
+   print "Hello $name!\n";
+}
+test("John");
+
+# reference 
+my @array = qw/a b c/;
+sub test{
+   my $arg = shift @_;
+   push $arg->@*, "hello";
+};
+test(\@array);
+print Dumper(@array);
+prints VAR1, VAR2,...
+
+# use subroutines as signatures
+use feature qw/ signatures /; # importing signatures
+sub test ($name){ # add required parameters
+   print "Hello, $name";
+}
+test("John");
+
+sub test ($name = undef){} # optional parameter it can be undef or defaults to any name ($name = "Bob")
+```
+#### Scopes
+- ```my``` - Local
+- ```our``` - Global
+```pl
+script.pl
+our $name = "Bob"; #my won't work
+
+script2.pl
+require './script.pl'
+our ($name); # explicitely require name variable
+print "$name";
+
+# state feature - initialize once in a memory
+use feature qw/ state /; 
+sub test{
+   state $var = 1; # my means 2 2 2
+   $var +=1;
+   print '>>>>' . $var . "\n";
+}
+test();
+test();
+test();
+# 2 3 4
+```
+#### Error Handling
+- ```die``` - perl will not execute after this line.
+- ```$@``` - Holds the value of the exception.
+- ```warn``` - does not stops execution after this line.
+- ```eval``` - Handles exception.
+```pl
+my $test = "world";
+eval {
+   die 'cannot go on';
+   $test = 'bob';
+};
+print "hello $test: $@\n";
+# hello world cannot go on at script.pl line 5.
+```
+#### Logical Operation
+```pl
+say 20 <=> 40
+# 0 if equal, 1 if lhs is larger, -1 if rhs is larger
+# for strings 'a' eq 'b' (eq, ne, lt, gt, ge, le) 
+
+# repetition
+my $str = "h" x 5;
+say $str; # hhhhh
+```
+#### Conditional
+```pl
+if(){}
+elseif(){}
+else{}
+unless(){} #if false run
+
+my $test = 1;
+$test = 2 if 2 > 1;
+$test = 2 unless 2 > 1;
+```
+#### Loops
+- If you are modifying a variable inside a loop it will affect the variable outside the loop. 
+```pl
+while(){}
+for(init;cond;inc/dec){}
+
+Loop2:
+foreach my $item(@list){
+   next if $item == 2; # scips the 2
+   last if $item == 2; # ends the loop when 2, won't execute after
+   redo if $item == 2; # redos the loop
+   goto Loop2 $item == 2; # goes to the tag Loop2
+   say "hello, $item";
+}
+```
+#### Regular Expressions (Regex)
+- A string of characters and symbols that defines a pattern you want to match against your string value.
+- Perl is very powerful in regex.
+
+```pl
+$test =~ /dog/   # looks for a pattern
+
+# m modifier
+$test =~ /dog\//
+$test =~ m{dog/}
+m{^dog/$} dog/ should be the beginning and end of the string
+m{^dog\w$} dog followed by a single character eg. dogs (word character)
+m{^dog\W$} dog followed by a non alphabet eg. dog- (not a word character)
+m{^dog\d$} dog followed by a single number eg. dog1
+m{^dog\d+$} dog followed by a one or more number eg. dog12345
+m{^dog\*$} matches dog exactly or followed by numbers eg. dog or dog13234
+m{^dog\d{2}$} dog followed by exactly two numbers eg. dog12
+m{^dog\d{2,4}$} dog followed by 2 to 4 numbers eg. dog123
+m{^dog\s$} dog followed by only spaces
+m{^dog\S$} anything that is not a space
+m{dog} exactly lowe case dog
+m{dog}i it can be in any case, lower upper eg. DoG, DOG
+
+$test !~ m{dog} does not match
+
+# capture patterns in a string
+my $test = 'cat123      ';
+$test =~ m{cat(\d+)}i # print $1 holds 123 which is the first capture
+$test =~ m{cat(\d+)(\s)}i # $1 holds 123 and $2 holds spaces
+
+# list of items
+my @list = qw/ dog rat cat /;
+foreach my $item (@list){
+   $item =~ m/^(\w{2})/; # do ra ca
+   say $1;
+}
+
+# replacements 
+$item =~ s/^(\w{2})/REPLACED/; # replace the first two characters to REPLACED
+
+# store the matches
+my @list = qw/ dog rat cat /;
+foreach my $item (@list){
+   my @captures = $item =~ m/^(\w)(\w)/; # do ra ca
+   say Dumper \@captures;
+}
+---------------
+$VAR1 = ['d','o'];
+$VAR2 = ['r','a'];
+$VAR3 = ['c','a'];
+---------------
+```
+#### Built-in Perl Functions
+##### map
+- Executes a code for every item you give it.
+- It's not gonna modify the items you give it. Original list remains same, it just copies.
+```pl
+my @list = qw/ cat dog /;
+my @new_list = map {
+   uc $_
+} @list;
+say Dumper(\@new_list); # VAR1 = [CAT, DOG];
+```
+##### grep
+- Instead of modifying the list like map it will compare something if its true it will give it to new list.
+```pl
+my @list = qw/ cat dog /;
+my @new_list = grep {
+   $_ eq 'cat'
+} @list;
+say Dumper(\@new_list); # VAR1 = [cat];
+```
+##### split
+- It takes a pattern and a string and it splits the given string based on that pattern.
+```pl
+my @parts = split m/e/, 'test_test';
+sat Dumper \@parts;  # VAR1 = ['t', 'st_t, 'st'];  // for spliting every character
+```
+##### join
+```pl
+my @parts = qw/ a b c d e /;
+my $string = join '_', @parts
+sat Dumper \@string; # VAR1 = 'a_b_c_d_e'     '' for abcde
+```
+- ```$test = uc $test``` - upper case
+- ```lc``` - lower case
+- ```ucfirst``` - upper case first character
+- ```lcfirst``` - lowe case first character
+- ```length``` - counts the character in a string
+- ```my $test = int (rand(10));``` - gives random number that is an integer 
+- ``` sleep2 ``` - stops the execution of the code for the given amount of seconds
+- ```my $value = substr('cat',1,2); # at``` - gives a substring
+- ```say(time)``` - prints current time
+
+#### Special Reserved Characters
+```pl
+say Dumper \@ARGV; # argument values while executing 
+-----------
+per script.pl 1 a b c
+$VAR1 = ['1', 'a', 'b', 'c'];
+-----------
+say Dumper $$; # gives the process id $VAR1 = 9069;
+```
+
+- ```@INC```- An array that holds absolute paths of the directories where perl can find the modules.
+- ```%ENV``` - Gives out environment variables
+- ```while(<STDIN>){}``` - for getting input
+- ```__FILS__``` - prints the name of the current file
+- ```__LINE__``` - prints the exact line number
+- ```__PACKAGE__``` - gives the package name eg. main
+- ```__END__``` - anything after this is commented out
+
+#### OOP
+- It's a concept of structuring your data and logic in object, each object has properties and methods defined by their classes.
+```pl
+---> Dog.pm
+package Dog; # package itself is a class
+use strict;
+use warnings;
+
+sub new{ # self method (implement a class)
+   my ( $class, $breed, $height, $weight, $color, $name ) = @_;
+   
+   my $self = {   # constructor (hash_ref oe anonymous array)
+      breed => $breed,
+      height => $height,
+      weight => $weight,
+      color => $color,
+      name => $name,
+   };
+   bless $self, $class; # relate the ref to your class
+   return $self;
+}
+sub breed { # Getter method
+   my $self = shift;
+   return $self->{breed};
+}
+sub set_height { # Setter menthod
+   my ($self, $height) = @_;
+   $self->{height} = $height;
+}
+sub get_height_and_weight {
+   my $self = shift;
+   return $self->{height} + $self->{weight};
+}
+# default method
+sub DESTROY { # cleaning up instances before picked up by garbage collectors
+   print "BYE!\n";
+}
+
+1;
+```
+```pl
+---> script.pl
+use strict;
+use warnings;
+use feature qw/ say /;
+
+BEGIN { # adding paths
+   push @INC, 'Users/saravana/perl';
+};
+
+use Data::Dumper;
+use Dog;
+
+my $Dog = Dog->new('lab', 50, 70, 'color', 'Fiddo'); # holds the reference of an instance
+say $Dog->breed; # getter
+$Dog->height(120); # setter
+say $Dog->height; 
+say $Dog->get_height_and_weight; #method
+1;
+```
+##### Inheritance
+- Parent class properties and methods can be accessible by the child class by inheriting.
+```pl
+package <Child Class Name>
+@ISA = qw(Parent Class Name)
+```
+```pl
+---> test.pm
+package test;
+sub new {
+   my $clsName = shift;
+   my $ref = { skillName => shift};
+   bless $ref, $clsName;
+   return $ref;
+}
+sub setSkill {
+   my ($ref, $skillName) = @_;
+   $ref->{skillName}=$skillName;
+   return $ref->{$skillName};
+}
+sub getSkill {
+   my ($ref) = @_;
+   return $ref->{skillName};
+}
+1;
+```
+```pl
+---> testChild.pm
+use testChild;
+use test; # inheriting from parent
+
+our @ISA = qw(test);
+```
+```pl
+---> testC.pl
+use testChild;
+my $obj = new testChild("Java");
+print $obj->getSkill();
+```
+
+#### use vs require
+- ```require``` - requiring a module at run time.
+- ```use``` - using a module at compile time.
+
+```pl
+if (1>2){
+   use IDoNotExist; # errors out at compilation
+   require IDoNotExist; 
+}
+```
+If you use ```use``` what will happan?
+- It will create a path to the module ```use Data::Dumper -> 'Data/Dumper.pm';```
+- Include it in base path  ```@INC _BASE_ . 'Data/Dumper.pm';```
+
+What happans behind the scenes?
+- perl is calling require, passing the module name 
+```pl
+BEGIN {
+   require 'Data/Dumper.pm';
+   Data::Dumper->import() # get all methods if not specified
+}
+```
+Data::Dumper::Dumper  calling Dumper method from Data package Dumper module
+
+#### Exporter and method types
+```pl
+---> OurModule.pm
+package OurModule;
+use strict;
+use warnings;
+use Exporter qw/ import /;
+our @EXPORT = qw/ add_nums /; # we are using exporter here
+
+sub add_nums {
+   my ($num1,$num2) = @_;
+   return $num1+$num2;
+}
+```
+```pl
+--->script.pl
+use strict;
+use warnings;
+use Data::Dumper;
+use OurModule;
+
+say add_nums(3,2);
+```
+- ```our @ISA = qw(Exporter);``` - Is a relationship means the package is getting inherited from exporter module. Properties of exporter module can be used within the package.
+- ```our @EXPORT_OK = qw(addtwonum);``` - When you use EXPORT_OK, use the fully qualified names. eg. test::addtwonum();
+#### Installing modules using CPANM (Perl's module manager)
+- Perl already comes with a package manager called CPAN.
+- Both are same but M is less noisy.
+- https://metacpan.org/ (official perl module repository)
+- For installing a module, ```cpanm JSON::XS``` ```use JSON::XS```
+
+#### Error Handling
+- ```Try::Tiny::SmartCatch``` - catch errors in different blocks by package name, regex and handle unknown exceptions.
+- ```Exception::Class``` - allows you to create custom named exception objects with attributes and other stuff.
+
+```pl
+use Try::Tiny::SmartCatch;
+use Exception::Class(
+      'MyException',
+      'App::Filesystem::Full'
+);
+
+try sub {
+   if (rand(5)>2){
+      App::Filesystem::Full->throw(error => 'oh no, the disk space is full!')
+   }
+   else {
+      MyException->throw(error => 'something else')
+   }
+},
+catch_when 'MyException' => sub {
+   say "$_";
+},
+catch_when 'App::Filesystem::Full' => sub {
+   say "I know this exception: $_";
+},
+catch_default sub {
+   say "$_";
+};
+```
+#### Web Requests with Mojo::UserAgent
+```pl
+use Mojo::UserAgent;
+use Data::Dumper;
+
+my $post = 'https;//abc.com';
+my $UA = Mojo::UserAgent->new;
+my $Result = $UA->get($post)->result;
+say $Result->is_success;
+say $Result->code;
+```
+promises alows us to make many requests in parallel without blocking the execution of the code
+```pl
+use Mojo::Promise;
+use Mojo::UserAgent;
+use Data::Dumper;
+
+my $post = 'https;//abc.com';
+my $promises = map {   # promises
+   $UA->get_p('https;//abc.com')
+} 1 .. 10;
+Mojo::Promise->all(@promises){
+   ->then(
+      sub {
+         my @resolved = @_;
+         say Dumper($_->[0]->result->json) for @resolved;
+      }
+   )
+   ->wait;
+}
+```
+#### Reading and Writing Files
+```pl
+# writing
+open( my $FH, '>', './test.txt');
+print $FH "hello"; # > overwritten, >> appends
+close($FH) # close File Handle
+
+# reading
+open( my $FH, '<', './test.txt');
+my $content = do { # do is similar to functions but returns the value at the end
+   local $/; <$FH>; # read all content ( localize the variable and set it to undefined )
+   
+};
+close($FH);
+say $content;
+
+# reading line by line
+open( my $FH, '<', './test.txt');
+my $content = '';
+while(defined( my $line = <$FH> )){
+   $content .= $line;
+};
+say content;
+```
+#### Run system commands
+- Perl allows you to call system commands.
+- It can capture the output of the sys command.
+```pl
+# capturing
+`touch ./$_.txt` for (1 .. 10);
+my $output = `ls ./`;
+say output;
+
+# if you don't care about capturing use system cmd
+system('ls', './');
+
+# run cmd and quit the script
+exec('ls', './');
+```
+---
+#### How to add a long string?
+```pl
+my $big_string = <<"END"; # define the word that is gonna end the long string
+This is a bunch
+of info
+on multiple lines
+END
+```
+
+- %c - character
+- %s - string
+- %d - decimal
+- %u - unsigned integer
+- %f - floating point (Decimal Notation)
+- %e - floating point (Scientific Notation)
+
+```pl
+my $minutes = sprintf( "%d", $seconds / 60 );
+```
+- ```next``` - skips the rest of the code and goes to the loop, like **continue** in other languages.
+- ```last``` - breaks the loop, like **break** in other languages.
+
+- ```chomp``` - new line is removed.
+- ```chop``` - last character is removed.
+
+#### Formats
+- Display an output in certain pattern
+```pl
+   format STDOUT =
+   @<<<<<<   @||||||   @>>>>>>
+   "left",   "middle", "right"
+   .
+Output:
+   left      middle    right
+
+```
+#### sending email using cpan
+```pl
+#!/usr/bin/perl
+use strict; 
+use warnings;
+use Mime:: Lite;
+my $mail = MIME:: Lite->new(
+         From=> 'dev@tutorialspoint.com',
+         To=> 'rk@tutorialspoint.com, jn@tutorialspoint.com', Subject => 'Report',
+         Type=> 'multipart/mixed'
+         );
+$mail->attach(
+         Type => 'TEXT',
+         Data => "PFA Status Report"
+         );
+$mail->attach(
+         Encoding => 'base64',
+         Type => 'TEXT/CSV', Path => "/new/",
+         Filename => "report.txt", Disposition => 'attachment'
+         );
+$mail->send;
+```
+#### DBI Access
+- Used for DB operations.
+- Driver name, database name, user id nd password should be known.
+```pl
+use DBI;
+my $driver = "oracle"
+my $database = "Alpha";
+my $dsn = "DBI:$driver:database=$database";
+my $userid = "user"
+my $password = "password"
+my $dbh = DBI->connect($dsn, $userid, $password) or die $DBI::errstr;
+my $sth = $dbh->prepare("INSERT INTO TUTORS    # statement handle
+                        (FIRST_NAME, LAST_NAME, SKILL_NAME)
+                        values
+                        ('Saravana','Kumar','Perl')");
+$sth->execute() or die $DBI::errstr;
+$sth0>finish();
+$dbh->commit or die $DBI::errstr;
+```
+##### splice
+- add or remove elements anywhere in an array
+- syntax: splice ARRAY or EXPR, OFFSET,LENGTH,LIST
+```pl
+@food = ('meat', 'oats', 'beans', 'eggs', 'bread');
+splice @food, 4, 2, 'Cereals', 'redmeat'; #removes food[4] and food[5] and replaces them.
+```
+
+#
+**Reference:** [youtube](https://www.youtube.com/playlist?list=PLzG1TFYtKG9eyjtlvOMiVBU4YH4xae-GI)
