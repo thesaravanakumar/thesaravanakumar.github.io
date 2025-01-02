@@ -1,8 +1,7 @@
-/** @type {import('next').NextConfig} */
+// Import dependencies
+import createMDX from '@next/mdx';
 
-// import remarkGfm from 'remark-gfm'
-import createMDX from '@next/mdx'
-
+// Define the Next.js configuration
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   experimental: {
@@ -10,24 +9,19 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-  }
-}
-
-module.exports = {
-  images: {
-    formats: ['image/avif', 'image/webp', 'image/gif'],
+    formats: ['image/avif', 'image/webp', 'image/gif'], // Moved here
   },
 };
 
-
+// Create the MDX configuration
 const withMDX = createMDX({
   options: {
     extension: /\.mdx?$/,
-    // remarkPlugins: [remarkGfm],
+    // remarkPlugins: [remarkGfm], // Uncomment if needed
     // rehypePlugins: [],
-    // If you use `MDXProvider`, uncomment the following line.
-    // providerImportSource: "@mdx-js/react",
+    // providerImportSource: '@mdx-js/react', // Uncomment if you use MDXProvider
   },
-})
+});
 
-export default withMDX(nextConfig)
+// Export the combined configuration
+export default withMDX(nextConfig);
