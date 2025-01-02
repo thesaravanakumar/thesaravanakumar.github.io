@@ -1,5 +1,6 @@
 import { ArticleLayout } from '@/components/articles/article-layout'
 import meta from '@/utils/meta'
+import Image from 'next/image';
 
 import foobar1 from './foobar1.png'
 import foobar2 from './foobar2.png'
@@ -28,7 +29,7 @@ export default (props) => <ArticleLayout article={article} {...props} />
 <br />
 
 <p align="center">
-<img 
+<Image 
   src={foobar1.src} 
   alt="foobar1"
 />
@@ -67,7 +68,7 @@ In each challenge, Google provides <es><strong>2-3</strong></es> out of the <es>
 <br />
 
 <p align="center">
-<img 
+<Image 
   src={foobar2.src} 
   alt="foobar2"
 />

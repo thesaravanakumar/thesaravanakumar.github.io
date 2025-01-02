@@ -1,5 +1,6 @@
 import { WorkLayout } from '@/components/work/work-layout'
 import meta from '@/utils/meta'
+import Image from 'next/image';
 
 import car from './car.png'
 import gif from './gif.gif'
@@ -58,7 +59,7 @@ export const metadata = {
 export default (props) => <WorkLayout work={work} {...props} />
 
 <p align="center">
-<img 
+<Image 
   src={car.src} 
   alt="Car"
 />
@@ -70,33 +71,33 @@ A 2D-Top Down Micro Racing Game with 2 stage settings and a choice of 9 differen
 
 <br />
 
-<img 
+<Image 
   src={gif.src} 
   alt="Gif"
 />
 
 <br />
 
-<img 
+<Image 
   src={end.src} 
   alt="End"
 />
 
 ### **UnityScene**
 
-<img 
+<Image 
   src={unity1.src} 
   alt="unity1"
 />
-<img 
+<Image 
   src={unity2.src} 
   alt="unity2"
 />
-<img 
+<Image 
   src={unity3.src} 
   alt="unity3"
 />
-<img 
+<Image 
   src={unity4.src} 
   alt="unity4"
 />

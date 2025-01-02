@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/server'
+import Image from 'next/image';
 
 export const runtime = 'edge'
 
@@ -48,11 +49,12 @@ export async function GET(request: Request) {
               </h1>
 
               <div tw="flex items-center border-t-4 border-gray-700/40 mt-8 pt-8">
-                <img
+                <Image
                   src="https://saravana.com/avatar.jpg"
+                  alt='avatar'
                   title="saravana Kumar"
-                  width="80px"
-                  height="80px"
+                  width="80"
+                  height="80"
                   tw="rounded-full mr-10 border-4 border-[#00CB2C]"
                 />
                 <div

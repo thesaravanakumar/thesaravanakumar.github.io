@@ -1,5 +1,6 @@
 import { ArticleLayout } from '@/components/articles/article-layout'
 import meta from '@/utils/meta'
+import Image from 'next/image';
 
 import kaggle from './kaggle.png'
 import profile from './profile.png'
@@ -25,7 +26,7 @@ export const metadata = {
 export default (props) => <ArticleLayout article={article} {...props} />
 
 <p align="center">
-<img 
+<Image 
   src={kaggle.src} 
   alt="kaggle"
 />
@@ -73,7 +74,7 @@ export default (props) => <ArticleLayout article={article} {...props} />
 <br />
 
 <p align="center">
-<img 
+<Image 
   src={profile.src} 
   alt="profile"
 />
