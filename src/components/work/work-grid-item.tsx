@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image';
 
 import { Work as WorkType } from '@/utils/fetch-works'
 
@@ -30,8 +31,9 @@ export function WorkGridItem({
             href={`/work/${work.slug}`}
             className="h-full w-full rounded-lg bg-gray-700"
           >
-            <img 
+            <Image 
               src={work.image}
+              alt={work.title}
               className="h-full w-full object-cover"
             />
           </Link>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function NotFound() {
   return (
@@ -112,7 +113,7 @@ export default function NotFound() {
       </style>
       <div>
         <div className="error">404</div>
-        <img
+        <Image
           src="http://images2.layoutsparks.com/1/160030/too-much-tv-static.gif"
           className="static"
           alt="Static Background"
