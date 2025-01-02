@@ -12,7 +12,7 @@ const RecentArticles = async () => {
       {recentArticles.map((recentArticle) => (
         <a
           key={recentArticle.slug}
-          href={recentArticle.slug}
+          href={`/articles/${recentArticle.slug}`}
           className="group/card min-[1150px]:col-span-6 last:min-[1150px]:col-span-6 relative col-span-6 overflow-hidden rounded-2xl border border-gray-500 bg-gray-1000 bg-gradient-to-br from-gray-900 via-gray-1000 to-gray-800 transition-colors hover:border-gray-200/70 active:top-[1px] md:col-span-3 last:md:col-span-6 lg:col-span-2 last:lg:col-span-2"
         >
           <div className="flex h-full w-full flex-col items-start bg-gray-1000 p-8 transition-colors hover:bg-transparent">
