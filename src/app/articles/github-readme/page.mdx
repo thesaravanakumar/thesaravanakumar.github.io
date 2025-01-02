@@ -1,7 +1,5 @@
 import { ArticleLayout } from '@/components/articles/article-layout'
 import meta from '@/utils/meta'
-import Image from 'next/image';
-
 
 import github from './github.png'
 
@@ -26,7 +24,7 @@ export const metadata = {
 export default (props) => <ArticleLayout article={article} {...props} />
 
 <p align="center">
-<Image 
+<img 
   src={github.src} 
   alt="github"
 />
