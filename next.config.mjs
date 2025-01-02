@@ -13,6 +13,13 @@ const nextConfig = {
   }
 }
 
+module.exports = {
+  images: {
+    formats: ['image/avif', 'image/webp', 'image/gif'],
+  },
+};
+
+
 const withMDX = createMDX({
   options: {
     extension: /\.mdx?$/,
