@@ -35,6 +35,8 @@ export function WorkGridItem({
               src={work.image}
               alt={work.title}
               className="h-full w-full object-cover"
+              width={400}
+              height={400}
             />
           </Link>
         </div>

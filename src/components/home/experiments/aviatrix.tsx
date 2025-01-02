@@ -8,6 +8,8 @@ export const AviatrixIllustration = () => {
         <Image 
           src={aviatrix.src} 
           alt="Google Cloud"
+          width={200}
+          height={200}
         />
       </div>
     </div>

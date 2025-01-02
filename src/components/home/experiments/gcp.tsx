@@ -8,6 +8,8 @@ export const GcpIllustration = () => {
         <Image 
           src={gcp.src}
           alt="Google Cloud"
+          width={200}
+          height={200}
         />
       </div>
     </div>

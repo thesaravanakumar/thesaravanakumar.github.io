@@ -8,6 +8,8 @@ export const AzureIllustration = () => {
         <Image 
           src={azure.src} 
           alt="Google Cloud"
+          width={200}
+          height={200}
         />
       </div>
     </div>

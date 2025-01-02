@@ -117,6 +117,8 @@ export default function NotFound() {
           src="http://images2.layoutsparks.com/1/160030/too-much-tv-static.gif"
           className="static"
           alt="Static Background"
+          width={800}
+          height={600}
         />
       </div>
     </>

@@ -63,7 +63,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </blockquote>
     ),
     Video,
-    // Image,
+    Image,
     ...components,
   }
 }
