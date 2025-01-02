@@ -13,7 +13,6 @@ export const work = {
   title: 'Just Race',
   description:
     'Had a stupid itch to build a 2D-Top Down Micro Racing Game. So I did!',
-  image: '/croppedgif.gif',
   createdAt: '2021-06-01',
   updatedAt: '2021-06-16',
   year: 2021,
@@ -58,10 +57,11 @@ export default (props) => <WorkLayout work={work} {...props} />
 
 
 
-<img 
-  src="/croppedgif.gif"
-  alt="Cars"
-/>
+<video width="800" height="600" controls>
+  <source src="/video.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
 
 A 2D-Top Down Micro Racing Game with 2 stage settings and a choice of 9 different cars, pursued by an AI Car but also an AI Chopper to chase you down. Car explosions, whirling chopper blades, exhaust fumes, and a trail left by a car are among the new animations. The game's different scenes include AI success, player win, loading, the main menu, and 18 distinct tracks for the two stages, all with sound effects.
 
