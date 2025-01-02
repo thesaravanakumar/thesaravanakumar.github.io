@@ -2,7 +2,6 @@ import { WorkLayout } from '@/components/work/work-layout'
 import meta from '@/utils/meta'
 
 import car from './car.png'
-import croppedgif from './croppedgif.gif'
 import end from './end.jpg'
 import unity1 from './unity1.jpg'
 import unity2 from './unity2.jpg'
@@ -13,7 +12,6 @@ export const work = {
   title: 'Just Race',
   description:
     'Had a stupid itch to build a 2D-Top Down Micro Racing Game. So I did!',
-  image: croppedgif.src,
   createdAt: '2021-06-01',
   updatedAt: '2021-06-16',
   year: 2021,
@@ -58,7 +56,7 @@ export default (props) => <WorkLayout work={work} {...props} />
 
 <p align="center">
 <img 
-  src={car.src} 
+  src="/unoptimized.gif"
   alt="Car"
 />
 </p>
@@ -66,6 +64,14 @@ export default (props) => <WorkLayout work={work} {...props} />
 A 2D-Top Down Micro Racing Game with 2 stage settings and a choice of 9 different cars, pursued by an AI Car but also an AI Chopper to chase you down. Car explosions, whirling chopper blades, exhaust fumes, and a trail left by a car are among the new animations. The game's different scenes include AI success, player win, loading, the main menu, and 18 distinct tracks for the two stages, all with sound effects.
 
 ### **Screenshots**
+
+<br />
+
+<img 
+  src={gif.src} 
+  alt="Gif"
+  unoptimized
+/>
 
 <br />
 
