@@ -40,3 +40,7 @@ Node.js provides the server-side environment where Next.js runs. Next.js builds 
 ### OG
 - OG stands for Open Graph. It's a protocol that allows web developers to specify metadata for their web pages that can be used by social media platforms like Facebook, Twitter, LinkedIn, and others. This metadata helps these platforms display rich previews of your web page when a link to it is shared.
 
+### JSX
+- JSX (JavaScript XML) is a syntax extension to JavaScript that allows you to write HTML-like code within your JavaScript files. React uses JSX extensively to define the structure and content of UI elements.
+- .tsx is a file extension used for TypeScript React files.
+- .x: The x added to .ts signifies that the file contains JSX.
