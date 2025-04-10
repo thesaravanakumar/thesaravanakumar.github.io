@@ -8,7 +8,7 @@ import { animate, transitions, variants } from '@/utils/animations'
 export const links = [
   {
     name: 'LinkedIn',
-    link: 'https://www.linkedin.com/in/thesaravanakumar/',
+    link: 'https://www.linkedin.com/in/saravana-m-kumar/',
     icon: Icons.LinkedIn,
   },
   {
