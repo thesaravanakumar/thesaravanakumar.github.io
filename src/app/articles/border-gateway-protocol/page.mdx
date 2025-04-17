@@ -1,0 +1,113 @@
+import { ArticleLayout } from '@/components/articles/article-layout'
+import meta from '@/utils/meta'
+
+import bgp from './bgp.png'
+import pathvector from './pathvector.png'
+import loopprevention from './loopprevention.png'
+import states from './states.png'
+
+
+export const article = {
+  title: 'Border Gateway Protocol',
+  description: 'Routing protocol of the internet.',
+  date: '2022-06-19',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    images: meta.website.url + '/articles/og?title=' + encodeURI(article.title),
+    type: 'article',
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+<p align="center">
+<img 
+  src={bgp.src} 
+  alt="bgp"
+/>
+</p>
+
+- One of the fundamental pillars holding up the internet and Global economy with ductape and hope :)
+- The internet is madeup of collection of networks that work like their own autonomos system (ISP, Big corporates, Government has their own network)
+- BGP allows them to announce to things that the network exists and which network can be reached by them. (Protocol used by routers)
+- Routing protocol of the internet.
+- Slowest Routing Protocol in the world
+- Individual IPs are grouped together into prefixes and routing tables between the autonomos systems are maintained by bgp
+- Application layer TCP port 179
+- Neighbours are manually defined.
+- TCP is used for reransmitting the lost data o avoid duplicate data.
+
+### Advantages:
+- Efficient Routing
+- Connectivity
+- Scalability
+- Traffic Control
+
+### Disadvantages:
+- It does not check for the authority to change traffic path by remote network
+- It does not check authenticity
+- It does not check for policy violation
+- Management of trust and untrust
+- Config is complex
+- It takes time to add or remove a network from bgp routing table
+- Triggered updates only!!!
+
+> Runs on "Trust me Bro vibes"
+
+### Autonomous System (AS)
+- It's a network or a collection of network that are managed by a single organization or administrative entry.
+
+
+### BGP Message Types:
+#### Open:
+It is used to initiate a BGP session between 2 routers. Includes the below:
+- BGP version
+- Sender AS number
+- Hold Time (Cisco default 180 seconds)
+- BGP identifier
+- optional parameter
+
+#### Keepalive Message:
+- This Message is used to maintain the BGP session between the BGP Peers
+- It will be sent once in one-third the "hold time". The default timer in cisco device is 60 seconds.
+
+#### Update:
+If any new route added and existing route deleted. Path Attributes
+
+#### Notification:
+- Terminate or rejects a BGP connection.
+- Can include error message (" BGP version not supported")
+
+Dynamic Routing Protocol:
+- Interior Gateway Protocol (IGP)
+	- OSPF
+	- ISIS
+	- EIGRP
+	- RIP
+	- IGRP
+- Exterior Gateway Protocol (EGP)
+	- BGP
+
+
+<p align="center">
+<img 
+  src={pathvector.src} 
+  alt="pathvector"
+/>
+<img 
+  src={loopprevention.src} 
+  alt="loopprevention"
+/>
+<img 
+  src={states.src} 
+  alt="states"
+/>
+</p>
+
