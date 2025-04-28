@@ -31,7 +31,7 @@ export default function Portrait() {
           <div className="flex items-center space-x-3">
             <Icons.Photo className="h-4 text-white/50" />
             <div className="text-sm font-bold uppercase text-white">
-              IMG_69.jpg
+              IMG_1337.jpg
             </div>
           </div>
         </div>
