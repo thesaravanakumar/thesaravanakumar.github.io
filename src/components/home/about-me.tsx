@@ -31,8 +31,8 @@ export default function AboutMe() {
             variants={variants.fadeInDown}
             transition={transitions.default}
           >
-            I’m a nerd from India working as a Cloud Network Software Enginner,
-            building all sorts of interesting and dumb ideas.
+            I’m a techie from India working as a Cloud Network Software Engineer, 
+            always experimenting with interesting and sometimes ridiculous ideas.
           </motion.p>
           <motion.p
             variants={variants.fadeInDown}
