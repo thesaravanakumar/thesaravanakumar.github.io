@@ -31,8 +31,8 @@ export default function AboutMe() {
             variants={variants.fadeInDown}
             transition={transitions.default}
           >
-            I’m a nerd from India working as a Cloud Network Software Enginner,
-            building all sorts of interesting and dumb ideas.
+            I’m a techie from India working as a Cloud Network Software Engineer, 
+            building all sorts of interesting and innovative ideas.
           </motion.p>
           <motion.p
             variants={variants.fadeInDown}
@@ -44,9 +44,9 @@ export default function AboutMe() {
               href="https://www.instagram.com/saravana.m.kumar/"
               className="text-gray-1000 underline decoration-green-400 dark:text-white"
             >
-              play with cameras
+              play with my camera
             </Link>
-            , &amp; geek over cool{' '}
+            , ps5, &amp; geek over cool{' '}
             <Link
               target="_blank"
               href="https://youtu.be/T43sbhCKvBY?si=CwAUuNdvOf3efGqi"

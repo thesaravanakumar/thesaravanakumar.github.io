@@ -12,8 +12,8 @@ import { animate, transitions, variants } from '@/utils/animations'
 export const experiments = [
   {
     name: 'Google Cloud',
-    description: 'Associate Cloud Engineer',
-    link: 'https://www.credential.net/41bc5a7f-4c35-4f98-8b60-c5ae4156edbd',
+    description: 'Professional Cloud Developer',
+    link: 'https://www.credly.com/badges/655073a2-c2c4-46a8-8a95-ea7cc2427504/public_url',
     illustration: <GcpIllustration />,
   },
   {
