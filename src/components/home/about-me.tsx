@@ -32,7 +32,7 @@ export default function AboutMe() {
             transition={transitions.default}
           >
             I’m a techie from India working as a Cloud Network Software Engineer, 
-            always experimenting with interesting and sometimes ridiculous ideas.
+            building all sorts of interesting and ridiculous ideas.
           </motion.p>
           <motion.p
             variants={variants.fadeInDown}
