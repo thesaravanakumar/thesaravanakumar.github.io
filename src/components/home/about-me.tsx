@@ -44,9 +44,9 @@ export default function AboutMe() {
               href="https://www.instagram.com/saravana.m.kumar/"
               className="text-gray-1000 underline decoration-green-400 dark:text-white"
             >
-              play with cameras
+              play with my camera
             </Link>
-            , &amp; geek over cool{' '}
+            , ps5, &amp; geek over cool{' '}
             <Link
               target="_blank"
               href="https://youtu.be/T43sbhCKvBY?si=CwAUuNdvOf3efGqi"
