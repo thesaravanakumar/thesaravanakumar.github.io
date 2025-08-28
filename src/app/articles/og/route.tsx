@@ -51,7 +51,7 @@ export async function GET(request: Request) {
 
               <div tw="flex items-center border-t-4 border-gray-700/40 mt-8 pt-8">
                 <Image
-                  src="https://saravana.com/avatar.jpg"
+                  src="https://saravana-kumar.com/avatar.jpg"
                   alt='avatar'
                   title="saravana Kumar"
                   width="80"
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
                   tw="flex items-center text-gray-500 text-5xl"
                   style={{ fontFamily: 'Satoshi Regular' }}
                 >
-                  <span>saravana.co</span>
+                  <span>saravana-kumar.com</span>
                   <span tw="mx-2 text-gray-700 text-6xl">/</span>
                   <span>articles</span>
                 </div>

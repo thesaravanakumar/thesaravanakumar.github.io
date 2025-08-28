@@ -34,14 +34,14 @@ export const works = [
       Had a stupid itch to build a 2D-Top Down Micro Racing Game. <br /> So I did!
       </>
     ),
-    link: 'https://saravanakumar.co/work/just-race',
+    link: 'https://saravana-kumar.com/work/just-race',
     illustration: Illustrations.Windows,
   },
   {
     name: 'Blender Mesh',
     description:
       'Game asset for Blender. A simple mesh to use in your game. Built for a friend. Got 150+ downloads.',
-    link: 'https://saravanakumar.co/work/blender',
+    link: 'https://saravana-kumar.com/work/blender',
     illustration: Illustrations.Blender,
   },
 ]

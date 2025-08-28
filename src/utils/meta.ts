@@ -4,7 +4,7 @@ const meta = {
     title: 'Saravana Kumar',
     description:
       'My little corner of the web. Work, projects and random thoughts.',
-    url: 'https://saravanakumar.co',
+    url: 'https://saravana-kumar.com',
   },
   social: {
     github: 'thesaravanakumar',
