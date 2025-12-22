@@ -1,0 +1,2456 @@
+import { ArticleLayout } from '@/components/articles/article-layout'
+import meta from '@/utils/meta'
+
+import img1 from './1.png'
+import img2 from './2.png'
+
+export const article = {
+  title: 'Go Programming Notes',
+  description: 'Comprehensive Go notes covering basics, types, concurrency, testing, tooling, and more.',
+  date: '2024-10-22',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  authors: [{ name: meta.name }],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    images: meta.website.url + '/articles/og?title=' + encodeURI(article.title),
+    type: 'article',
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+
+
+<details>
+  <summary style={{ cursor: 'pointer' }}>Table of Contents</summary>
+
+1. [Introduction & History](#introduction--history)
+   - [What is Go?](#what-is-go)
+   - [Design Philosophy](#design-philosophy)
+   - [About the Creators](#about-the-creators)
+   - [Timeline](#timeline)
+2. [Basics](#basics)
+   - [Key Concepts](#key-concepts)
+   - [Package Structure](#package-structure)
+   - [Environment](#environment)
+   - [Build vs Install](#build-vs-install)
+   - [Go Runtime](#go-runtime)
+3. [Data Types & Variables](#data-types--variables)
+   - [Data Types](#data-types)
+   - [Variable Declaration](#variable-declaration)
+   - [Type Inference](#type-inference)
+   - [Constants](#constants)
+4. [Input/Output Operations](#inputoutput-operations)
+   - [Input (Scanning)](#input-scanning)
+   - [Output (Printing)](#output-printing)
+5. [Control Flow](#control-flow)
+   - [Conditionals](#conditionals)
+     - [If-Else](#if-else)
+     - [Switch](#switch)
+   - [Loops](#loops)
+     - [For Loop](#for-loop)
+     - [Range Loop](#range-loop)
+6. [Functions](#functions)
+   - [Basic Function](#basic-function)
+   - [Function Signature](#function-signature)
+   - [Anonymous Functions](#anonymous-functions)
+   - [Variadic Functions](#variadic-functions)
+   - [Named Return Values](#named-return-values)
+   - [Closures](#closures)
+   - [Recursive Closures](#recursive-closures)
+   - [Callback Functions](#callback-functions)
+   - [Defer](#defer)
+7. [Data Structures](#data-structures)
+   - [Arrays](#arrays)
+   - [Slices](#slices)
+     - [Slices are Reference Types](#important-slices-are-reference-types)
+     - [Capacity and Underlying Array](#capacity-and-underlying-array)
+     - [2D Slices](#2d-slices)
+     - [Sorting Slices](#sorting-slices)
+   - [Maps](#maps)
+   - [Strings](#strings)
+8. [Pointers](#pointers)
+   - [Pass by Value vs Reference](#pass-by-value-vs-reference)
+   - [Value vs Pointer Semantics](#value-vs-pointer-semantics)
+   - [The Stack & The Heap](#the-stack--the-heap)
+9. [Structs & Methods](#structs--methods)
+   - [Structs Basics](#structs-basics)
+   - [Struct Pointers](#struct-pointers)
+   - [Constructors](#constructors)
+   - [Abstraction](#abstraction)
+   - [Methods](#methods)
+   - [Method Sets](#method-sets)
+   - [Struct Sorting](#struct-sorting)
+   - [Composition](#composition)
+10. [Interfaces](#interfaces)
+    - [Interface Basics](#interface-basics)
+    - [Implicit Implementation](#implicit-implementation)
+    - [Composition Over Inheritance](#composition-over-inheritance)
+    - [Understanding Interfaces and Polymorphism](#understanding-interfaces-and-polymorphism)
+    - [Go's OOP Approach](#gos-oop-approach)
+    - [Empty Interface](#empty-interface)
+11. [Generics](#generics)
+    - [Type Parameters](#type-parameters)
+    - [Generic Types](#generic-types)
+    - [Type Constraints](#type-constraints)
+    - [Underlying Type Constraints](#underlying-type-constraints)
+12. [Concurrency](#concurrency)
+    - [Concurrency vs Parallelism](#concurrency-vs-parallelism)
+    - [Goroutines & WaitGroups](#goroutines--waitgroups)
+    - [Race Conditions](#race-conditions)
+    - [Mutex](#mutex-preventing-race-conditions)
+    - [Channels](#channels)
+      - [Unbuffered Channels](#unbuffered-channels)
+      - [Buffered Channels](#buffered-channels)
+      - [Directional Channels](#directional-channels)
+      - [Range Over Channels](#range-over-channels)
+    - [Select](#select)
+    - [Fan-In Pattern](#fan-in-pattern)
+    - [Fan-Out Pattern](#fan-out-pattern)
+    - [Context](#context)
+13. [Error Handling](#error-handling)
+    - [Error Interface](#error-interface)
+    - [Error Handling Options](#error-handling-options)
+    - [Creating Errors](#creating-errors)
+    - [Custom Error Types](#custom-error-types)
+    - [Error Handling Idiom](#error-handling-idiom)
+    - [Logging to File](#logging-to-file)
+    - [Recover](#recover)
+14. [Testing](#testing)
+    - [Test File Structure](#test-file-structure)
+    - [Table-Driven Tests](#table-driven-tests)
+    - [Benchmarking](#benchmarking)
+    - [Test Coverage](#test-coverage)
+    - [Linting and Code Quality](#linting-and-code-quality)
+15. [Standard Library & Packages](#standard-library--packages)
+    - [Common Packages](#common-packages)
+    - [Math Package](#math-package)
+    - [Strings Package](#strings-package)
+    - [Init Function](#init-function)
+16. [Advanced Concepts](#advanced-concepts)
+    - [UTF-8 Encoding](#utf-8-encoding)
+    - [SHA256 Checksum](#sha256-checksum)
+    - [Character Increment](#character-increment)
+    - [Documentation](#documentation-godoc)
+    - [Stringer Interface](#stringer-interface)
+    - [Writer Interface](#writer-interface)
+
+</details>
+
+
+## Introduction & History
+
+### What is Go?
+
+Go (often referred to as **Golang** to avoid ambiguity and because of its former domain name golang.org) is:
+- A **statically typed** (declare variable type or inferred), **compiled**, high-level general-purpose programming language
+- Often called "C for the 21st century"
+- Popular choice for **high-performance server-side applications**
+- The language that built tools like **Docker**, **Kubernetes**, **CockroachDB**, and **Dgraph**
+
+**Six Main Points About Go:**
+1. **Statically typed** - Variables must be declared or type inferred
+2. **Strongly typed** - Cannot mix types (e.g., can't add number and string)
+3. **Compiled** - Source code compiled to machine code for performance
+4. **Fast compile time** - Innovations in dependency analysis enable extremely fast compilation
+5. **Built-in concurrency** - Goroutines allow functions to run simultaneously on multiple CPU threads
+6. **Simplicity** - Features like garbage collection make programming easier
+
+### Design Philosophy
+
+Go was designed at Google in **2007** to improve programming productivity in an era of multicore, networked machines and large codebases. The designers wanted to address criticisms of other languages in use at Google while keeping their useful characteristics:
+
+- **Static typing and run-time efficiency** (like C)
+- **Readability and usability** (like Python)
+- **High-performance networking and multiprocessing**
+
+> The designers were primarily motivated by their shared dislike of C++.
+
+**Key Features:**
+- Source code compiles down to machine code, which generally **outperforms interpreted languages**
+- Fast compile times made possible by innovations in dependency analysis
+- Package and module system makes it easy to import/export code between projects
+- **Pointers without pointer arithmetic** - Store memory addresses safely without the dangerous and unpredictable behavior of pointer arithmetic
+- **Concurrency with goroutines** - Functions can run simultaneously utilizing multiple CPU threads
+
+### About the Creators
+
+Created at Google by:
+- **Robert Griesemer** (Hotspot, JVM)
+- **Rob Pike** (Unix, UTF-8)
+- **Ken Thompson** (B, C, Unix, UTF-8)
+
+### Timeline
+- 2005: First dual-core processors emerge
+- 2006: Go development started
+- 2007: Go designed at Google
+- 2009: Open sourced on November 10, 2009
+
+**Fun Fact:** In the Go playground, time begins at `2009-11-10 23:00:00 UTC` - Go's birthday! The announcement was titled "Hey! Ho! Let's Go!" (a Ramones song reference).
+
+<div style={{ textAlign: 'center' }}>
+  <img src={img1.src} alt="Go notes diagram 1" style={{ maxWidth: '100%', height: 'auto' }} />
+</div>
+<div style={{ textAlign: 'center' }}>
+  <img src={img2.src} alt="Go notes diagram 2" style={{ maxWidth: '100%', height: 'auto' }} />
+</div>
+
+
+## Basics
+
+### Key Concepts
+- Every Go program is made up of **packages**
+- Programs start running in **package main**
+- Files using a package start with `package <name>` (e.g., `import "math/rand"` → files start with `package rand`)
+- **Capitalized** names are exported and can be used outside the package
+- Constants cannot be declared using `:=` syntax
+
+### Package Structure
+```go
+package main
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+```
+
+### Environment
+```bash
+go env                    # View all environment variables
+go env GOARCH GOOS       # View architecture and OS
+```
+
+### Build vs Install
+- `go build`: Compiles executable and moves it to destination
+- `go install`: Does more - moves executable to `$GOPATH/bin` and caches non-main packages to `$GOPATH/pkg` for faster future compilation
+
+### Go Runtime
+The Go runtime system manages:
+- **Goroutine management**: Creates, destroys, and schedules goroutines
+- **Garbage collection**: Automatically frees unused memory
+- **Memory management**: Allocates and deallocates memory
+- **Channel management**: Manages communication between goroutines
+- **Stack management**: Each goroutine has its own stack
+
+---
+
+## Data Types & Variables
+
+### Data Types
+```go
+// Boolean
+bool
+
+// String
+string
+
+// Integers (unsigned)
+uint uint8 uint16 uint32 uint64 uintptr
+
+// Integers (signed)
+int int8 int16 int32 int64
+
+// Floating point
+float32 float64
+
+// Aliases
+byte    // alias for uint8
+rune    // alias for int32 (represents a Unicode code point)
+
+// Complex numbers
+complex64 complex128
+```
+
+### Variable Declaration
+```go
+// Method 1: Declare then assign
+var name string
+name = "John"
+
+// Method 2: Declare and initialize
+var name string = "John"
+
+// Method 3: Multiple variables
+var b, c int = 1, 2
+
+// Method 4: Type inference
+var name = "John"
+
+// Method 5: Short declaration (inside functions only)
+name := "John"  
+// Outside a function, every statement begins with a keyword (var, func, etc.)
+// so the := construct is not available
+```
+
+### Type Inference
+```go
+%T // Format specifier to get type of variable
+```
+
+### Constants
+```go
+const pi = 3.14
+
+// Constants cannot be declared using := syntax
+// var name := "test"  // This works for variables
+// const name := "test"  // ERROR! Must use: const name = "test"
+
+// Numeric constants are high-precision values
+const d = 3e20  // 300,000,000,000,000,000,000
+```
+
+**Constant expressions perform arithmetic with arbitrary precision:**
+
+The value `3e20` equals 300,000,000,000,000,000,000. This number is **HUGE** - it's too big to fit in a standard `int64` (which maxes out at around 9 quintillion).
+
+However, Go allows you to define this as a constant because constants are untyped and have arbitrary precision until they're used in a context that requires a specific type. Only when you try to assign it to a typed variable would you get an error if it doesn't fit.
+
+```go
+const bigNumber = 3e20           // OK - untyped constant
+// var x int64 = bigNumber       // ERROR - too big for int64
+var y float64 = bigNumber        // OK - fits in float64
+```
+
+---
+
+## Input/Output Operations
+
+### Input (Scanning)
+
+#### `fmt.Scan`
+- Reads space-separated input from standard input
+- Stops on first newline or whitespace
+```go
+fmt.Scan(&a, &name)
+```
+
+#### `fmt.Scanln`
+- Reads input until newline (`\n`)
+- Stops on newline instead of whitespace
+```go
+fmt.Scanln(&a, &name)
+```
+
+#### `fmt.Scanf`
+- Reads formatted input using format specifiers (`%s`, `%d`, `%f`)
+- Stops based on specified format
+```go
+fmt.Scanf("%d %s", &a, &name)
+```
+
+#### `bufio.NewReader`
+- Advanced input reading capabilities
+- Reads entire line including spaces
+```go
+reader := bufio.NewReader(os.Stdin) 
+input, _ := reader.ReadString('\n')  // Reads entire line including spaces
+```
+
+### Output (Printing)
+
+#### `fmt.Print`
+- Prints values directly to console
+- Concatenates values as strings
+- No newline at end
+```go
+fmt.Print("Hello", " ", "World!")  // Output: Hello World!
+```
+
+#### `fmt.Println`
+- Prints values with newline at end
+- Concatenates values with spaces between them
+```go
+fmt.Println("Hello", "World!")  // Output: Hello World!\n
+```
+
+#### `fmt.Printf`
+- Prints with formatting specifiers
+- Uses `%s`, `%d`, `%v`, etc.
+- No automatic newline (must specify `\n`)
+```go
+fmt.Printf("Name: %s, Age: %d\n", "Alice", 25)
+fmt.Printf("%d %c\n", A[i], A[i])  // %d = ASCII value, %c = character
+```
+
+#### `fmt.Sprint`
+- Concatenates values into string without formatting
+- Doesn't print to console, returns string
+- No newline
+```go
+message := fmt.Sprint("Hello", " ", "World!")
+fmt.Println(message)
+```
+
+#### `fmt.Sprintln`
+- Concatenates values into string with newline
+- Returns string with newline
+```go
+message := fmt.Sprintln("Hello", "World!")
+fmt.Print(message)
+```
+
+#### `fmt.Sprintf`
+- Formats values into string using format specifiers
+- Returns formatted string
+- No newline unless explicitly added
+```go
+message := fmt.Sprintf("Name: %s, Age: %d", "Alice", 25)
+fmt.Println(message)
+```
+
+#### `fmt.Fprint`
+- Writes formatted output to specified writer (files, buffers, etc.)
+```go
+import (
+    "os"
+    "fmt"
+)
+func main() {
+    fmt.Fprint(os.Stdout, "Hello World!")
+}
+```
+
+---
+
+## Control Flow
+
+### Conditionals
+
+#### If-Else
+```go
+if a < b {
+    // code
+} else if a > c {
+    // code
+} else {
+    // code
+}
+
+// Statement can precede conditional
+if num := 9; num < 0 {
+    // num is available here and in all subsequent branches
+}
+```
+
+**Note:** There is no ternary operator in Go. You'll need to use a full if statement even for basic conditions.
+
+**Statement-Statement Idiom:**
+
+You can declare and initialize variables within the if statement itself:
+
+```go
+if z := a; z > n {
+    // z is available in this scope
+    fmt.Println(z)
+}
+// z is not available here
+```
+
+**Comma-Ok Idiom:**
+
+Used to check if a key exists in a map or if a channel receive was successful:
+
+```go
+// With maps
+if val, ok := m[key]; ok {
+    // Key exists, use val
+    fmt.Println(val)
+} else {
+    // Key doesn't exist
+    fmt.Println("Key not found")
+}
+
+// Shorthand
+val, ok := m[key]
+if !ok {
+    fmt.Println("Key not found")
+}
+```
+
+#### Switch
+
+You can use commas to separate multiple expressions in the same case statement.
+
+```go
+switch i {
+    case 1:
+        // code
+    case 2, 3, 4:  // Multiple values
+        // code
+    case i < 10:   // Conditional expression
+        // code
+    case 'a', 'e', 'i', 'o', 'u':
+        // code
+    case "yes":
+        // code
+    default:
+        // code
+}
+
+// Switch without expression (alternate if-else)
+switch {
+    case a < 12:
+        fmt.Println("It's before noon")
+    default:
+        fmt.Println("It's after noon")
+}
+```
+
+**Features:**
+- Can use commas to separate multiple expressions
+- `default` is optional
+- `break` and `fallthrough` keywords available
+
+### Loops
+
+#### For Loop
+```go
+for i, j := 0, len(A)-1; i < j; i, j = i+1, j-1 {
+    // code
+}
+```
+
+#### Range Loop
+
+Range loops provide a convenient way to iterate over elements in various data structures:
+
+```go
+// Slice or Array
+for i, v := range slice {
+    // i = index, v = value
+    fmt.Printf("Index: %d, Value: %d\n", i, v)
+}
+
+// Map
+for k, v := range map {
+    // k = key, v = value
+    fmt.Printf("Key: %s, Value: %d\n", k, v)
+}
+
+// String (iterates over runes, not bytes)
+for i, c := range "hello" {
+    // i = byte index (not rune index!), c = rune
+    fmt.Printf("Byte index: %d, Character: %c\n", i, c)
+}
+
+// Ignore index/key with _
+for _, v := range slice {
+    fmt.Println(v)
+}
+
+// Just get index/key
+for i := range slice {
+    fmt.Println(i)
+}
+```
+
+---
+
+## Functions
+
+### Basic Function
+```go
+func addTwoNums(a, b int) int {
+    return a + b
+}
+
+result := addTwoNums(1, 2)
+```
+
+### Function Signature
+```
+func (r receiver) identifier(p parameters) (r returns) { code }
+```
+
+### Anonymous Functions
+
+An anonymous function is a function literal defined without a name.
+
+**Two ways to use anonymous functions:**
+
+1. **Immediate Invocation** - Call it right where you define it
+2. **Assignment to a Variable** - Store it for later use
+
+```go
+// Function literal assigned to variable
+hypot := func(x, y float64) float64 {
+    return math.Sqrt(x*x + y*y)
+}
+fmt.Println(hypot(5, 12))
+
+// Immediate invocation (no parameters)
+func() {
+    fmt.Println("Hi!")
+}()
+
+// Immediate invocation with parameters
+func(name string) {
+    fmt.Println("Hello,", name)
+}("Alice")
+```
+
+### Variadic Functions
+- Can be called with any number of trailing arguments. For example, fmt.Println is a common variadic function.
+```go
+func dum(num ...int) {
+    fmt.Print(num)  // Equivalent to []int
+}
+
+func main() {
+    dum(2, 4)
+    dum(1, 2, 3, 4, 5)
+}
+```
+
+### Named Return Values
+A return statement without arguments returns the named return values. This is known as a "naked" return.
+
+```go
+func split(sum int) (x, y int) {
+    x = sum * 4 / 9
+    y = sum - x
+    return  // "naked" return
+}
+```
+**Note:** Naked returns should only be used in short functions for readability.
+
+### Closures
+
+A closure is a function that remembers variables from its creation environment. Closures are particularly useful when working with [goroutines](#goroutines--waitgroups) and callbacks.
+
+```go
+func intSeq() func() int { // the Factory
+    i := 0 // Blueprint: "Every machine gets a private memory 'i' starting at 0."
+    
+    // Blueprint: "The machine we build is a function that does this:"
+    return func() int {
+        i++         // Pressing the button adds 1 to its private 'i'.
+        return i    // Then it returns the new value of 'i'.
+    }
+}
+
+f := intSeq()
+fmt.Println(f())  // 1
+fmt.Println(f())  // 2
+fmt.Println(f())  // 3
+
+g := intSeq()
+fmt.Println(g())  // 1
+fmt.Println(g())  // 2
+```
+
+**Understanding Closures: The Factory Analogy**
+
+Think of `intSeq()` as a factory that builds counter machines:
+
+**The Factory (`intSeq` function):**
+- Its only job is to build and return a new "counter" function.
+
+**The Private Memory (`i` variable):**
+- When the factory builds a counter, it gives it a private memory (`i`) that starts at 0.
+- This memory is unique to each counter.
+
+**The Machine (the returned `func()`):**
+- This is the actual counter function. It has one job: add 1 to its private memory (`i`) and return the new value.
+- It "closes over" or "remembers" its own `i` between calls.
+
+**In Code:**
+- `f := intSeq()` is ordering your first machine. It gets its own private memory.
+- `g := intSeq()` is ordering a second, separate machine. It has its own memory and doesn't affect the first one.
+
+Each time you call `f()`, it's like pressing a button on your first counter. Each time you call `g()`, it's like pressing a button on your second counter. They're independent!
+
+**Fibonacci Closure Example:**
+```go
+func fibonacci() func() int {
+    f1, f2 := 0, 1
+    return func() int {
+        f := f1
+        f1, f2 = f2, f+f2
+        return f
+    }
+}
+
+func main() {
+    f := fibonacci()
+    for i := 0; i < 10; i++ {
+        fmt.Println(f())
+    }
+}
+```
+
+### Recursive Closures
+
+Anonymous functions can also be recursive, but you need to declare the variable before defining the function.
+
+```go
+var fib func(n int) int
+
+// Must declare 'fib' variable first, then assign the function
+// This is because the function body refers to 'fib' itself
+fib = func(n int) int {
+    if n < 2 {
+        return n
+    }
+    return fib(n-1) + fib(n-2)  // Calls itself
+}
+
+fib(10)
+```
+
+### Callback Functions
+```go
+func doMath(a int, b int, f func(int, int) int) int {
+    return f(a, b)
+}
+
+func add(a, b int) int {
+    return a + b
+}
+
+doMath(1, 2, add)
+```
+
+### Defer
+A defer statement defers function execution until surrounding function returns.
+
+```go
+func main() {
+    fmt.Println("counting")
+    for i := 0; i < 3; i++ {
+        defer fmt.Println(i)
+    }
+    fmt.Println("done")
+}
+// Output:
+// counting
+// done
+// 2
+// 1
+// 0
+```
+
+**Key Points:**
+- Arguments evaluated immediately, but function call deferred
+- Deferred calls pushed onto stack (LIFO execution)
+- Useful for cleanup operations
+
+```go
+func demonstrateArgumentEvaluation() {
+    i := 10
+    fmt.Printf("1. Declaring 'i' with value: %d\n", i)
+    
+    defer fmt.Printf("3. Deferred print. Value of 'i' is: %d\n", i)
+    
+    i = 20
+    fmt.Printf("2. After changing 'i', its value is now: %d\n", i)
+}
+// Output:
+// 1. Declaring 'i' with value: 10
+// 2. After changing 'i', its value is now: 20
+// 3. Deferred print. Value of 'i' is: 10
+```
+
+---
+
+## Data Structures
+
+### Arrays
+Arrays **do not change in size**.
+
+```go
+var a [5]int                    // Declaration
+var a = [2]int{1, 2}           // Initialize
+var a = [...]int{1, 2}         // Length inferred
+a := [5]int{1: 2, 4: 3}        // Initialize specific elements
+a := [5]int{1, 2}              // Partially initialized
+
+fmt.Println(a[0])              // Access element
+fmt.Println(a)                 // Print array
+a[0] = 3                       // Change element
+len(a)                         // Length
+
+// Multi-dimensional
+twoD := [2][3]int{
+    {1, 2, 3},
+    {4, 5, 6},
+}
+```
+
+### Slices
+Slices are **dynamic in size**.
+
+```go
+var a []int                    // nil slice
+primes := []int{2, 3, 5}       // Slice literal
+numbers := make([]int, 5)      // make(type, length)
+data := make([]string, 0, 10)  // make(type, length, capacity)
+
+len(s)                         // Length
+cap(s)                         // Capacity
+s = append(s, "e", "f")        // Append
+copy(c, s)                     // Copy
+
+l := s[2:5]                    // Slice s[2], s[3], s[4]
+s[:5]                          // Exclude s[5]
+s[2:]                          // Include s[2]
+a = a[:n-1]                    // Resize length
+
+slices.Equal(t, t2)            // Compare slices
+
+// Remove element
+a = append(a[:2], a[3:]...)    // Second arg must be unpacked with ...
+```
+
+#### Important: Slices are Reference Types
+```go
+a := []int{1, 2, 3}
+b := a
+a[0] = 4
+// b[0] is now 4 - b references the same underlying array!
+
+// To create independent copy:
+b := make([]int, len(a))
+copy(b, a)
+```
+
+#### Capacity and Underlying Array
+
+The capacity of a slice is the number of elements in the underlying array, counting from the first element in the slice.
+
+```go
+s := []int{2, 3, 5, 7, 11, 13}  // len=6 cap=6
+s = s[:4]                        // len=4 cap=6 (capacity unchanged)
+s = s[2:]                        // len=2 cap=4 (capacity decreases!)
+```
+
+**Why capacity decreases:** When you slice from index 2 onwards with `s[2:]`, you're creating a new slice that starts at the 3rd element of the underlying array. The capacity is calculated from that starting point to the end of the underlying array. Since we're 2 elements from the start, capacity is reduced by 2 (from 6 to 4).
+
+**Important:** Reslicing can extend a slice beyond its current length, up to its capacity:
+```go
+s := []int{2, 3, 5, 7, 11, 13}
+s = s[:0]   // len=0 cap=6
+s = s[:4]   // len=4 cap=6 - can reslice up to capacity!
+```
+
+#### 2D Slices
+Go doesn't have true 2D arrays. 2D slices are slices of slices.
+
+```go
+// Create 2D slice (n rows, m columns)
+a := make([][]int, n)
+for i := 0; i < n; i++ {
+    a[i] = make([]int, m)
+}
+
+// Access elements
+for i := 0; i < n; i++ {
+    for j := 0; j < m; j++ {
+        fmt.Scan(&a[i][j])
+    }
+}
+
+len(a)      // Row length
+len(a[0])   // Column length
+```
+
+#### Sorting Slices
+```go
+sort.Ints(s)      // Sort integers ascending
+sort.Strings(s)   // Sort strings ascending
+```
+
+### Maps
+Maps are **unordered**. Zero value is `nil`.
+
+```go
+// Map literal
+scores := map[string]int{
+    "Bob":   10,
+    "Alice": 9,
+}
+
+m := make(map[string]int)      // Empty map
+m := make(map[string]int, n)   // With initial capacity
+
+m["k1"] = 7                    // Set value
+len(m)                         // Length
+delete(m, "k2")                // Delete key/value
+clear(m)                       // Remove all key/values
+maps.Equal(n, n2)              // Compare maps
+
+// Comma-ok idiom
+val, ok := m["k2"]             // ok is true if key exists
+if val, ok := m["k2"]; ok {
+    // key exists
+}
+```
+
+#### Omitting Type in Literals
+If top-level type is just a type name, you can omit it from elements:
+```go
+type Vertex struct {
+    Lat, Long float64
+}
+
+var m = map[string]Vertex{
+    "Bell Labs": {40.68433, -74.39967},
+    "Google":    {37.42202, -122.08408},
+}
+```
+
+### Strings
+
+Strings are **read-only slices of bytes** encoded in UTF-8.
+
+```go
+len(s)                         // Length
+A[i] == 'a'                    // Check character
+A[:len(A)-1]                   // Slice string
+runes := []rune(A)             // Convert to mutable rune slice (The standard Go idiom for building or modifying a string is to first convert it to a mutable slice of runes)
+
+// String operations
+s := "hey this is sk"
+s1 := strings.Split(s, " ")    // ["hey", "this", "is", "sk"] slice of strings [hey this is sk] but for A = " hello world " ["", "", "world", "", "", "hello", "", ""]
+strings.Fields(A)              // Handles multiple spaces - specifically designed to handle this. It treats one or more consecutive spaces as a single delimiter and automatically ignores any leading or trailing spaces.
+strings.Join(A, " ")           // Join with separator (hello world)
+strings.Index(A, B)            // Find substring index, gives index of b in a (aabaa, ba, 2)
+
+// Range over strings
+for i, c := range "go" {
+    // i is index, c is rune
+}
+
+// UTF-8 operations
+import "unicode/utf8"
+utf8.RuneCountInString(s)      // Count runes, not bytes
+```
+
+#### Character vs String
+- Everything is binary. Characters use ASCII (e.g., 'a' = 97).
+- In other languages, strings are made of “characters”. In Go, the concept of a character is called a rune - it’s an integer that represents a Unicode code point.
+- strings are equivalent to []byte
+
+```go
+var a rune                     // Rune declaration
+A := "hello"
+fmt.Printf("%d %c\n", A[i], A[i])  // %d = ASCII, %c = character
+```
+
+---
+
+## Pointers
+
+Go has **no pointer arithmetic**. Pointers are safer than in C/C++.
+
+```go
+var p *int     // Pointer to int
+i := 10
+p = &i         // Address of i
+fmt.Println(*p)// Read i through pointer (dereference)
+*p = 21        // Set i through pointer
+```
+
+### Pass by Value vs Reference
+
+**Everything in Go is passed by value** unless it's a reference type:
+- Pointers: A pointer holds the memory address of the value.
+- Slices: A slice is a descriptor of an array segment. It includes a pointer to the array.
+- Maps: A powerful data structure that associates values of one type with values of another type.
+- Channels: Used for communication between goroutines.
+- Functions and Interfaces.
+
+```go
+func sliceChange(a []int) {
+    a[0] = 99
+}
+
+a := []int{1, 2, 3}
+sliceChange(a)
+fmt.Println(a[0])  // 99 - slice is reference type!
+```
+
+### Value vs Pointer Semantics
+
+- When a function receives a value, it gets its own copy of that value. It will be typically placed in "THE STACK", which is fast and typically does not involve any form of garbage collection. Once the function returns, memory can be instantly reclaimed.
+- When a function receives a pointer, it tells the compiler that this value could be shared across goroutine boundaries or it could be needed after the function call. So it will allocate it to "THE HEAP", which is more expensive and requires garbage collection.
+- Try running go run -gcflags -m main.go (tells you if its moved to heap or not)
+
+### The Stack & The Heap
+
+#### The Stack
+- Stores local variables for functions/goroutines
+- LIFO (Last-In-First-Out) structure
+- Fast, automatic management
+- Memory reclaimed when function returns
+
+#### The Heap
+- Stores variables with longer lifetime
+- More flexible but slower
+- Managed by garbage collector
+- Used for shared or persistent data
+
+---
+
+## Structs & Methods
+
+### Structs Basics
+
+Structs are collections of fields. They are **mutable**.
+
+```go
+package main
+import "fmt"
+
+type person struct {
+    name string
+    age  int
+}
+
+type secretagent struct {
+    person  // Nested struct (embedding)
+    ltk     bool
+}
+
+func main() {
+    // Struct literal
+    p1 := person{
+        name: "Joe",
+        age:  28,
+    }
+    fmt.Println(p1)
+    fmt.Println(p1.name)
+    
+    // Nested struct
+    sa1 := secretagent{
+        person: person{
+            name: "James B",
+            age:  35,
+        },
+        ltk: true,
+    }
+    fmt.Println(sa1)
+    fmt.Println(sa1.age)  // Promoted field
+    
+    // Anonymous struct
+    a := struct {
+        name string
+    }{
+        name: "SK",
+    }
+    fmt.Println(a)
+}
+```
+
+### Struct Pointers
+
+Pointers are automatically dereferenced. `(*p).X` notation is cumbersome.
+
+```go
+p := &person{name: "Alice"}
+fmt.Println(p.name)  // Automatic dereference
+```
+
+### Constructors
+
+- Constructors are special functions for reliably creating multiple instances of similar objects in a class-based OOP language.
+- There is no specific definition for constructors in Go, but we can achieve the same functionality by writing a function (conventionally named `New...`).
+
+```go
+func newPerson(name string) *person {
+    p := person{name: name}
+    p.age = 42
+    return &p
+}
+
+func main() {
+    fmt.Println(newPerson("Jon"))  // &{Jon 42}
+}
+```
+### Abstraction
+Defining behavior without implementation. This is the primary job of an interface. It defines a contract that other types can satisfy.
+
+#### Constructor & Destructor
+- **Constructor**: Go has no special constructor keyword. We use a factory function (by convention named `New...`) to create and initialize our objects.
+- **Destructor**: Go is garbage-collected, so you don't manually destroy objects. For cleanup (like closing files), you use the `defer` keyword.
+
+### Methods
+
+Go doesn't have classes, but you can define methods on types.
+
+```go
+type rect struct {
+    width, height int
+}
+
+// Pointer receiver (can modify)
+func (r *rect) area() int {
+    return r.width * r.height
+}
+
+// Value receiver (read-only)
+func (r rect) perim() int {
+    return 2*r.width + 2*r.height
+}
+
+func main() {
+    r := rect{width: 10, height: 5}
+    
+    fmt.Println("area: ", r.area())    // (&r).area() behind scenes
+    fmt.Println("perim:", r.perim())
+    
+    rp := &r
+    fmt.Println("area: ", rp.area())
+    fmt.Println("perim:", rp.perim())  // (*rp).perim() behind scenes
+}
+```
+
+### Method Sets
+
+The method set of a type determines which [interfaces](#interfaces) it implements:
+
+| Receiver Type | Can be called on |
+|---------------|------------------|
+| (t T)         | T and *T         |
+| (t *T)        | *T               |
+
+```go
+type circle struct {
+    radius float64
+}
+
+func (c *circle) area() float64 {
+    return 3.14 * c.radius * c.radius
+}
+
+type shape interface {
+    area() float64
+}
+
+func info(s shape) {
+    fmt.Println("Area", s.area())
+}
+
+func main() {
+    c := circle{5}
+    fmt.Println(c.area())  // Works: compiler adds &
+    info(&c)               // Must pass pointer
+    // info(c)             // Won't work with interface!
+}
+```
+
+### Struct Sorting
+
+Implement `sort.Interface` methods: `Len()`, `Swap()`, `Less()`
+> see https://pkg.go.dev/sort#pkg-index
+
+```go
+type Person struct {
+    Name string
+    Age  int
+}
+
+type ByAge []Person
+
+func (a ByAge) Len() int           { return len(a) }
+func (a ByAge) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByAge) Less(i, j int) bool { return a[i].Age < a[j].Age }
+
+func main() {
+    people := []Person{
+        {"Bob", 31},
+        {"John", 42},
+        {"Michael", 17},
+        {"Jenny", 26},
+    }
+    
+    fmt.Println(people)
+    // One can define a set of methods for the slice type, as with ByAge, and call sort.Sort.
+    sort.Sort(ByAge(people))
+    fmt.Println(people)
+}
+```
+
+### Composition
+
+- Go uses **composition over inheritance**. Embed structs to reuse code.
+- The fields and methods of the embedded "inner" struct become accessible to the outer struct.
+- This concept is similar to inheritance in traditional object-oriented languages, but Go does not have a built-in inheritance mechanism.
+
+> In Go there are no classes, you create a type!
+
+```go
+type Engine struct {
+    // Engine fields
+}
+
+func (e *Engine) Start() {
+    fmt.Println("Engine started")
+}
+
+type Car struct {
+    Engine  // Embedding
+    // Car-specific fields
+}
+
+func main() {
+    car := Car{}
+    car.Start()  // Promoted method
+}
+```
+
+---
+
+## Interfaces
+
+### Interface Basics
+
+```go
+type I interface {
+    M()
+}
+
+type T struct {
+    S string
+}
+
+// This method means T implements interface I
+// No explicit declaration needed!
+func (t T) M() {
+    fmt.Println(t.S)
+}
+
+func main() {
+    var i I = T{"hello"}
+    i.M()
+}
+```
+
+### Implicit Implementation
+
+Go uses **duck typing**: "If it walks like a duck and quacks like a duck, it's a duck."
+
+```go
+type Shape interface {
+    Area() float64
+}
+
+type Circle struct {
+    Radius float64
+}
+
+func (c Circle) Area() float64 {
+    return math.Pi * c.Radius * c.Radius
+}
+
+type Rectangle struct {
+    Width, Height float64
+}
+
+func (r Rectangle) Area() float64 {
+    return r.Width * r.Height
+}
+
+// Polymorphism: accepts any type with Area() method
+func printShapeInfo(s Shape) {
+    fmt.Printf("The area is %f\n", s.Area())
+}
+
+func main() {
+    c := Circle{Radius: 10}
+    r := Rectangle{Width: 5, Height: 4}
+    
+    printShapeInfo(c)  // Works!
+    printShapeInfo(r)  // Works!
+}
+```
+
+### Composition Over Inheritance
+
+- Go favors **composition over inheritance**. 
+- In traditional OOP, you have inheritance: Dog -> Animal, Manager -> Employee
+- Instead, Go favors composition over inheritance. You achieve this through embedding. Instead of saying a Manager is an Employee, you say a Manager has an Employee record inside it.
+
+**Example: Manager/Employee**
+
+```go
+type Employee struct {
+    Name string
+    ID   string
+}
+
+func (e Employee) Display() {
+    fmt.Printf("Name: %s, ID: %s\n", e.Name, e.ID)
+}
+
+type Manager struct {
+    Employee  // Embedding (not inheritance!)
+    Reports   []string
+}
+
+func main() {
+    m := Manager{
+        Employee: Employee{Name: "Alice", ID: "E123"},
+        Reports:  []string{"Bob", "Charlie"},
+    }
+    
+    // Because Employee is embedded, we can access its fields and methods directly
+    m.Display()  // Prints: Name: Alice, ID: E123
+    
+    // This LOOKS like inheritance, but it's composition
+    // Manager doesn't inherit from Employee; it contains an Employee
+}
+```
+
+### Understanding Interfaces and Polymorphism
+- Polymorphism is the ability to treat different objects in the same way. In Java, you might have a Shape class and different subclasses (Circle, Square) that you can put into a List. (Value can be any type)
+- Go achieves this with interfaces, but it does so implicitly. You don't have to declare "my type implements this interface." You just implement the required methods. This is often called "duck typing."
+- Polymorphism means a variable of one type (an interface) can hold a value of another type (a struct).
+
+**The USB-C Port Analogy:**
+
+Think of an interface like a USB-C port on your laptop. The port doesn't care if you're plugging in a phone, tablet, or headphones - as long as the device has a USB-C connector, it will work.
+
+```go
+// The interface (the USB-C port contract)
+type Speaker interface {
+    Speak() string
+}
+
+// Dog implements Speaker
+type Dog struct{}
+
+func (d Dog) Speak() string {
+    return "Woof!"
+}
+
+// Cat implements Speaker
+type Cat struct{}
+
+func (c Cat) Speak() string {
+    return "Meow!"
+}
+
+// This function is polymorphic - it works with ANY type that implements Speaker
+func MakeSound(s Speaker) {
+    fmt.Println(s.Speak())
+}
+
+func main() {
+    dog := Dog{}
+    cat := Cat{}
+    
+    // Same function works with different types!
+    MakeSound(dog)  // Prints: Woof!
+    MakeSound(cat)  // Prints: Meow!
+}
+```
+
+**How Go's Compiler Checks Interfaces (Duck Typing):**
+
+When Go sees `MakeSound(dog)`:
+1. "The `MakeSound` function needs a `Speaker`."
+2. "The contract for `Speaker` is a method called `Speak() string`."
+3. "I'm being given a variable `dog` of type `Dog`."
+4. "Let me check the `Dog` type... Does it have a method called `Speak() string`? ...Yes, it does!"
+5. "Great. That means `Dog` implicitly implements `Speaker`. The code is valid."
+
+> **Key Point:** In Go, you don't declare that you are fulfilling a contract. You simply prove it by having the right methods. If you have the methods, you implement the interface automatically.
+
+### Go's OOP Approach
+
+While Go isn't a traditional object-oriented language, it provides its own unique tools to achieve the same goals.
+
+| Goal | Traditional OOP | Go Way |
+|------|----------------|---------|
+| Encapsulation | class with fields/methods | struct with methods |
+| Code Reuse | Inheritance (is-a) | Composition (has-a) |
+| Polymorphism | Explicit interfaces | Implicit interfaces (duck typing) |
+| Hierarchy | Central concept | No hierarchies |
+| Objects | Complex with constructors | Simple structs |
+
+### Go is OOP? Yes and no
+
+Go is OOP? **Yes and no** — it provides its own unique tools to achieve the same goals.
+
+#### Why People Say "Yes, Go is OOP-like"
+
+- **Encapsulation** — Go supports encapsulation, which is a core pillar of OOP. Encapsulation is bundling data and the methods that operate on that data together.
+- In Go, you use **structs** and **methods** to group data and behavior.
+- Access control is handled at the **package level** (capitalization determines export), rather than with per-field access modifiers found in some OOP languages.
+
+#### Why People Say "No, Go is not OOP"
+
+- **Class vs type**: Go has no `class` keyword or class-based inheritance; instead you define `type` (usually structs) and attach methods to them.
+- **Object vs instance**: An object in class-based languages is an instance of a class that bundles data and methods together; in Go you build similar constructs from **structs + methods**.
+- **Inheritance**: Traditional inheritance (subclassing) is not part of Go's design. Code reuse is achieved using **composition** (embedding), not `extends`.
+- **Polymorphism**: Achieved via implicit **interfaces** (duck typing) rather than class hierarchies—types satisfy interfaces by implementing methods.
+- **Abstraction**: Interfaces provide abstraction, but Go's approach differs from classical OOP abstractions (no abstract classes).
+
+**Key Differences:**
+- No classes (use structs)
+- No inheritance (use composition)
+- No explicit interface implementation
+- No constructors/destructors (use factory functions and defer)
+
+**Summary:** Go is OOP-like in spirit but different in implementation. It achieves encapsulation, code reuse, and polymorphism through structs, composition, and implicit interfaces rather than traditional OOP mechanisms.
+
+### Empty Interface
+
+- The empty interface `interface{}` (or `any` in Go 1.18+) can hold any type.
+- The interface type that specifies zero methods is known as the empty interface:
+An empty interface may hold values of any type. (Every type implements at least zero methods.)
+Empty interfaces are used by code that handles values of unknown type. For example, fmt.Print takes any number of arguments of type interface{}.
+
+```go
+func describe(i interface{}) {
+    fmt.Printf("(%v, %T)\n", i, i)
+}
+
+func main() {
+    var i interface{}
+    describe(i)      // (<nil>, <nil>)
+    
+    i = 42
+    describe(i)      // (42, int)
+    
+    i = "hello"
+    describe(i)      // (hello, string)
+}
+```
+
+---
+
+## Generics
+
+### Type Parameters
+- Go functions can be written to work on multiple types using type parameters. The type parameters of a function appear between brackets, before the function's arguments.
+- Comparable is a useful constraint that makes it possible to use the == and != operators on values of the type. func Index[T comparable](s []T, x T) int
+
+```go
+func Index[T comparable](s []T, x T) int {
+    for i, v := range s {
+        if v == x {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    si := []int{10, 20, 15, -10}
+    fmt.Println(Index(si, 15))  // 2
+    
+    ss := []string{"foo", "bar", "baz"}
+    fmt.Println(Index(ss, "bar"))  // 1
+}
+```
+
+### Generic Types
+
+Before generics, you had to use `interface{}` and lose type safety:
+
+```go
+// OLD way (no type safety)
+type OldList struct {
+    next *OldList
+    val  any  // Can be anything
+}
+
+// NEW way (type safe)
+type List[T any] struct {
+    next *List[T]
+    val  T
+}
+```
+
+**Understanding Generic Type Syntax:**
+
+Let's break down what `type List[T any] struct` means step by step:
+
+```go
+//       1.        2.      3.
+type List[T any] struct {
+    next *List[T]  // 4.
+    val  T         // 5.
+}
+```
+
+1. **`type List`**: We are declaring a new type named `List`.
+2. **`[T]`** - The Type Parameter: This is the core of generics. `T` is a placeholder for a real type that will be provided later. You can think of it as a variable, but for types. (You could call it `ValueType`, `Element`, etc., but `T` is conventional.)
+3. **`any`** - The Constraint: This defines the "rules" for what `T` is allowed to be. The `any` constraint is the most permissive: it means `T` can be any type at all.
+4. **`next *List[T]`**: This means the `next` field must be a pointer to another `List` that holds the exact same type `T`. You can't link a `List` of integers to a `List` of strings. This enforces type safety throughout your data structure.
+5. **`val T`**: The value stored in this list node will have the type `T`. If you create a `List` of ints, `val` will be an `int`. If you create a `List` of strings, `val` will be a `string`.
+
+> **In simple terms:** `type List[T any]` means "I am defining a type called `List` that can work on any type, and we'll call that placeholder type `T` for now."
+
+**Why this matters:**
+
+Before generics, when you retrieved a value from `OldList`, Go only knew its type was `any`. You had to manually check its real type ("is this an int or a string?") and convert it. This is clumsy and can lead to errors at runtime if you guess wrong.
+
+With generics, the type is known at compile time, giving you full type safety and better performance.
+
+### Type Constraints
+
+```go
+// Basic constraint
+func addT[T int|float64](a, b T) T {
+    return a + b
+}
+
+// Type set interface
+type nums interface {
+    int | float64
+}
+
+func addT[T nums](a, b T) T {
+    return a + b
+}
+```
+
+### Underlying Type Constraints
+
+Use `~` to include all types with an underlying type:
+
+```go
+type nums interface {
+    ~int | ~float64  // Includes custom types with int/float64 as underlying type
+}
+
+func addT[T nums](a, b T) T {
+    return a + b
+}
+
+type blah int
+
+func main() {
+    var a blah = 10
+    fmt.Println(addT(a, 2))  // Works with ~int
+}
+```
+
+---
+
+## Concurrency
+
+> "Concurrency is not parallelism." - Rob Pike
+
+### Concurrency vs Parallelism
+
+**Concurrency:**
+- Design pattern for code that can execute multiple tasks independently
+- Potential for simultaneous execution
+- Achieved with goroutines and channels
+
+**Parallelism:**
+- Actually executing multiple tasks at the same time
+- Requires multiple CPUs/cores
+- Runtime decides when to use parallelism
+
+**Sequential Execution:**
+- Opposite of parallel
+- One task at a time in predefined order
+
+### Goroutines & WaitGroups
+
+Goroutines are lightweight threads managed by the Go runtime. A `WaitGroup` is used to wait for a collection of goroutines to finish executing.
+
+```go
+package main
+import (
+    "fmt"
+    "sync"
+    "runtime"
+)
+
+var wg sync.WaitGroup
+
+func foo() {
+    for i := 0; i < 3; i++ {
+        fmt.Println("foo:", i)
+    }
+}
+
+func bar() {
+    for i := 0; i < 3; i++ {
+        fmt.Println("bar:", i)
+    }
+    wg.Done()
+}
+
+func main() {
+    foo()
+    wg.Add(1)
+    fmt.Println("OS", runtime.GOOS)
+    fmt.Println("ARCH", runtime.GOARCH)
+    fmt.Println("CPU", runtime.NumCPU())
+    fmt.Println("Goroutines", runtime.NumGoroutine())  // 1
+    
+    go bar()  // Launch goroutine
+    
+    fmt.Println("Goroutines", runtime.NumGoroutine())  // 2
+    wg.Wait()  // Wait for goroutine to finish
+}
+```
+```sh
+foo:  0
+foo:  1
+foo:  2
+OS  linux
+ARCH  amd64
+CPU  1
+Goroutines  1
+Goroutines  2
+bar:  0
+bar:  1
+bar:  2
+```
+### Race Conditions
+
+```go
+package main
+
+import (
+	"fmt"
+	"runtime"
+	"sync"
+)
+
+func main() {
+	fmt.Println("Goroutines:", runtime.NumGoroutine())
+
+	counter := 0 // shared memory for all goroutines
+
+	var wg sync.WaitGroup
+	wg.Add(5)
+
+	for i := 0; i < 5; i++ {
+		go func() { // function literal/anonymous function
+			v := counter
+			runtime.Gosched() // pause the current goroutine and give another goroutine a chance to run.
+			v++
+			counter = v
+			wg.Done()
+		}()
+		fmt.Println("Goroutines:", runtime.NumGoroutine())
+	}
+	wg.Wait()
+	fmt.Println("Goroutines:", runtime.NumGoroutine())
+	fmt.Println("count:", counter)
+}
+```
+```sh
+go run -race main.go # -race will tell you if there is any race condition (Found: 1 data race)
+Goroutines: 1
+Goroutines: 2
+Goroutines: 3
+Goroutines: 4
+Goroutines: 5
+Goroutines: 6
+Goroutines: 1
+count: 1
+```
+
+### Mutex (Preventing Race Conditions)
+
+How to prevent race conditions? Answer: Use a Mutex.
+- When a goroutine accesses shared memory, it should lock it so it cannot be accessed by other goroutines simultaneously.
+```go
+func main() {
+	fmt.Println("Goroutines:", runtime.NumGoroutine())
+
+	counter := 0
+
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	wg.Add(5)
+
+	for i := 0; i < 5; i++ {
+		go func() {
+		    mu.Lock() // Lock prevents other goroutines from accessing shared memory
+			v := counter
+			runtime.Gosched() // pause/yield the current goroutine and give another goroutine a chance to run.
+			v++
+			counter = v
+			mu.Unlock()
+			wg.Done()
+		}()
+		fmt.Println("Goroutines:", runtime.NumGoroutine())
+	}
+	wg.Wait()
+	fmt.Println("Goroutines:", runtime.NumGoroutine())
+	fmt.Println("count:", counter)
+}
+```
+```sh
+Goroutines: 1
+Goroutines: 2
+Goroutines: 3
+Goroutines: 4
+Goroutines: 5
+Goroutines: 6
+Goroutines: 1
+count: 5
+```
+
+### Channels
+
+> "Don't communicate by sharing memory; share memory by communicating."
+
+#### Won't work
+```go
+func main() {
+	c:=make(chan int) // unbuffered channel
+	c<- 42 // main goroutine blocks here because it's waiting for a receiver 
+	fmt.Println(<-c)
+}
+// deadlock: all goroutines are asleep
+```
+Fix: Goroutine
+
+#### Unbuffered Channels
+
+```go
+func main() {
+    c := make(chan int)
+    
+    go func() {
+        c <- 42  // Send
+    }()
+    
+    fmt.Println(<-c)  // Receive
+}
+```
+
+#### Buffered Channels
+
+```go
+func main() {
+    c := make(chan int, 1)  // Buffer size 1
+    c <- 42                 // Won't block
+    fmt.Println(<-c)
+}
+```
+
+#### Directional Channels
+
+```go
+// Send-only
+func foo(c chan<- int, wg *sync.WaitGroup) {
+    c <- 30
+    wg.Done()
+}
+
+// Receive-only
+func bar(c <-chan int, wg *sync.WaitGroup) {
+    fmt.Println(<-c)
+    wg.Done()
+}
+
+func main() {
+    c := make(chan int)
+    var wg sync.WaitGroup
+    wg.Add(2)
+    
+    go foo(c, &wg)
+    go bar(c, &wg)
+    
+    wg.Wait()
+}
+```
+
+#### Range Over Channels
+
+```go
+func foo(c chan<- int, wg *sync.WaitGroup) {
+    for i := 0; i < 5; i++ {
+        c <- i
+    }
+    close(c)  // Must close or deadlock!
+    wg.Done()
+}
+
+func bar(c <-chan int, wg *sync.WaitGroup) {
+    for v := range c {  // Reads until closed
+        fmt.Println(v)
+    }
+    wg.Done()
+}
+```
+
+### Select
+
+The `select` statement lets a goroutine wait on multiple communication operations. It blocks until one of its cases can proceed, then executes that case. If multiple cases are ready, it chooses one at random.
+
+Select statement waits on multiple channel operations: "I am ready to receive from odd, even, OR quit. I will proceed with whichever one sends me a value first."
+
+```go
+func send(odd, even, quit chan<- int) {
+    for i := 1; i <= 5; i++ {
+        if i%2 == 0 {
+            even <- i
+        } else {
+            odd <- i
+        }
+    }
+    quit <- 0
+}
+
+func receive(odd, even, quit <-chan int) {
+    for {
+        select {
+            case v := <-odd:
+                fmt.Println("Odd:", v)
+            case v := <-even:
+                fmt.Println("Even:", v)
+            case v := <-quit:
+                fmt.Println("Quit:", v)
+                return
+        }
+    }
+}
+
+func main() {
+    odd := make(chan int)
+    even := make(chan int)
+    quit := make(chan int)
+    
+    go send(odd, even, quit)
+    receive(odd, even, quit)
+}
+```
+
+### Fan-In Pattern
+
+Taking values from many channels and putting them onto one channel.
+
+```go
+func send(odd, even chan<- int) {
+    for i := 1; i <= 5; i++ {
+        if i%2 == 0 {
+            even <- i
+        } else {
+            odd <- i
+        }
+    }
+    close(even)
+    close(odd)
+}
+
+func receive(odd, even <-chan int, fanin chan<- int) {
+    var wg sync.WaitGroup
+    wg.Add(2)
+    
+    go func() {
+        for v := range odd {
+            fanin <- v
+        }
+        wg.Done()
+    }()
+    
+    go func() {
+        for v := range even {
+            fanin <- v
+        }
+        wg.Done()
+    }()
+    
+    wg.Wait()
+    close(fanin)
+}
+
+func main() {
+    odd := make(chan int)
+    even := make(chan int)
+    fanin := make(chan int)
+    
+    go send(odd, even)
+    go receive(odd, even, fanin)
+    
+    for v := range fanin {
+        fmt.Println(v)
+    }
+}
+```
+Rob pike - https://go.dev/talks/2012/concurrency.slide#28
+
+### Fan-Out Pattern
+
+The fan-out pattern distributes work across multiple goroutines to process tasks concurrently, then gathers (fans-in) the results. This pattern is useful for parallelizing CPU-intensive operations.
+
+Distributing work across multiple goroutines and gathering results:
+
+```go
+func populate(c1 chan<- int) {
+    for i := 1; i <= 5; i++ {
+        c1 <- i
+    }
+    close(c1)
+}
+
+func fanOutIn(c1, c2 chan int) {
+    var wg sync.WaitGroup
+    
+    for v := range c1 {
+        wg.Add(1)
+        go func(value int) {
+            c2 <- doSomething(value)
+            wg.Done()
+        }(v)
+    }
+    
+    wg.Wait()
+    close(c2)
+}
+
+func doSomething(v int) int {
+    return v + 10
+}
+
+func main() {
+    c1 := make(chan int)
+    c2 := make(chan int)
+    
+    go populate(c1)
+    go fanOutIn(c1, c2)
+    
+    for v := range c2 {
+        fmt.Println(v)
+    }
+}
+```
+In short: You Fan-Out to do work faster, and then Fan-In to gather all the results.
+
+### Context
+
+- Context is tool that you can use with concurrent design patterns.
+- In Go servers, each incoming request is handled in its own goroutine. Request handlers often start additional goroutines to access backends such as databases and RPC services. The set of goroutines working on a request typically needs access to request-specific values such as the identity of the end user, authorization tokens, and the request’s deadline. When a request is canceled or times out, all the goroutines working on that request should exit quickly so the system can reclaim any resources they are using. https://go.dev/blog/context
+
+---
+
+## Error Handling
+
+### Go's Error Philosophy
+
+- Go avoids exceptions for more readable and predictable code.
+- In many languages, exceptions are like hidden "gotos." A function can suddenly stop and jump to a catch block far away, making the code's flow difficult to follow.
+- Instead, Go treats errors as regular values. A function that might fail simply returns the error alongside its normal result.
+- This explicit error handling makes code more verbose but also more transparent and easier to reason about.
+
+### Error Interface
+
+```go
+type error interface {
+    Error() string
+}
+```
+
+### Error Handling Options
+
+```go
+// fmt.Println - simple print
+fmt.Println(err)
+
+// log.Println - prints with date/time
+log.Println(err)
+
+// log.Fatalln - exits program
+log.Fatalln(err)  // Deferred functions do NOT run
+
+// log.Panicln - stops current goroutine
+log.Panicln(err)  // Deferred functions run
+
+// panic - stops normal execution
+panic(err)  // Deferred functions run
+```
+
+### Creating Errors
+
+```go
+import (
+    "errors"
+    "fmt"
+)
+
+// errors.New
+func isTrue(b bool) (bool, error) {
+    if !b {
+        return false, errors.New("It was False")
+    }
+    return true, nil
+}
+
+// fmt.Errorf
+func isTrue(b bool) (bool, error) {
+    if !b {
+        return false, fmt.Errorf("It was False")
+    }
+    return true, nil
+}
+```
+
+### Custom Error Types
+
+```go
+type myError struct {
+    time int
+    err  error
+}
+
+func (e myError) Error() string {
+    return fmt.Sprintf("%v Error dude :( %v", e.time, e.err)
+}
+
+func isTrue(b bool) (bool, error) {
+    if !b {
+        return false, myError{10, fmt.Errorf("It was False")}
+    }
+    return true, nil
+}
+```
+
+### Error Handling Idiom
+
+```go
+_, err := fmt.Println("hello")
+if err != nil {
+    fmt.Println(err)
+}
+```
+
+### Logging to File
+
+```go
+func main() {
+    f, err := os.Create("log.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer f.Close()
+    
+    log.SetOutput(f)
+    
+    f2, err := os.Open("no-file.txt")
+    if err != nil {
+        log.Fatalln(err)  // Writes to log.txt and exits
+    }
+    defer f2.Close()
+}
+```
+
+### Recover
+
+Built-in function to regain control of panicking goroutine. Only useful in **deferred** functions.
+
+```go
+func main() {
+    f()
+    fmt.Println("Returned normally from f.")
+}
+
+func f() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered in f", r)
+        }
+    }()
+    
+    fmt.Println("Calling g.")
+    g(0)
+    fmt.Println("Returned normally from g.")
+}
+
+func g(i int) {
+    if i > 3 {
+        fmt.Println("Panicking!")
+        panic(fmt.Sprintf("%v", i))
+    }
+    defer fmt.Println("Defer in g", i)
+    fmt.Println("Printing in g", i)
+    g(i + 1)
+}
+```
+
+Output:
+```
+Calling g.
+Printing in g 0
+Printing in g 1
+Printing in g 2
+Printing in g 3
+Panicking!
+Defer in g 3
+Defer in g 2
+Defer in g 1
+Defer in g 0
+Recovered in f 4
+Returned normally from f.
+```
+
+---
+
+## Testing
+
+### Test File Structure
+
+- Tests must be in files ending with `_test.go`
+- Must be in same package
+- Function signature: `func TestXxx(t *testing.T)`
+
+```go
+// main.go
+func sum(a, b int) int {
+    return a + b
+}
+
+// main_test.go
+func TestSum(t *testing.T) {
+    if sum(2, 3) != 5 {
+        t.Error("Expected", 5, "Got", sum(2, 3))
+    }
+}
+```
+
+```sh
+go test    
+PASS
+ok      test    3.459s
+--- FAIL: TestSum (0.00s)
+    main_test.go:7: Expected 5 Got 6
+FAIL
+exit status 1
+FAIL    test    4.616s
+```
+
+### Table-Driven Tests
+
+The idiomatic way to test multiple cases:
+
+```go
+type testcase struct {
+    data   []int
+    answer int
+}
+
+func TestSum(t *testing.T) {
+    tests := []testcase{
+        {
+            data:   []int{2, 3},
+            answer: 5,
+        },
+        {
+            data:   []int{7, 3},
+            answer: 10,
+        },
+    }
+    
+    for _, tc := range tests {
+        result := sum(tc.data[0], tc.data[1])
+        if result != tc.answer {
+            t.Errorf("Expected %d, got %d", tc.answer, result)
+        }
+    }
+}
+```
+
+### Benchmarking
+
+Benchmarks run code repeatedly to get stable average execution time.
+
+```go
+var result int
+
+func BenchmarkSum(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        result = sum(1, 2, 3, 4, 5)
+    }
+}
+```
+
+Run benchmarks: `go test -bench .`
+
+**Output explanation:**
+```sh
+go test -bench .
+goos: windows
+goarch: amd64
+pkg: test
+cpu: 12th Gen Intel(R) Core(TM) i5-1245U
+BenchmarkSum-12    305967357    4.197 ns/op    0 B/op    0 allocs/op
+PASS
+ok      test    3.106s
+```
+
+- `BenchmarkSum-12`: Test name and number of CPUs
+- `305967357`: Number of iterations run
+- `4.197 ns/op`: Average time per operation
+- `0 B/op`: Bytes allocated per operation
+- `0 allocs/op`: Number of allocations per operation
+
+### Test Coverage
+
+Check what percentage of your code is tested:
+
+```sh
+go test -cover
+PASS
+coverage: 80.0% of statements
+ok      test    9.639s
+```
+
+Generate detailed coverage report:
+```sh
+go test -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
+### Linting and Code Quality
+
+Tools to improve code quality:
+
+```sh
+go fmt ./...         # Format code automatically
+go vet ./...         # Report suspicious constructs
+golint ./...         # Report poor coding style (install separately)
+```
+
+**go fmt**: Automatically formats your code according to Go standards.  
+**go vet**: Examines Go source code and reports suspicious constructs (unreachable code, improper use of range, etc.).  
+**golint**: Reports style mistakes (exported functions without comments, naming conventions, etc.).
+
+---
+
+## Standard Library & Packages
+
+### Common Packages
+
+```go
+fmt     // Formatting I/O
+math    // Mathematical functions
+strings // String manipulation
+sort    // Sorting
+time    // Time/date operations
+os      // OS interface
+io      // I/O primitives
+bufio   // Buffered I/O
+errors  // Error creation
+log     // Logging
+sync    // Synchronization primitives
+```
+
+### Math Package
+
+```go
+math.Floor(x)      // Greatest integer ≤ x
+math.Ceil(x)       // Least integer ≥ x
+math.Round(x)      // Nearest integer
+math.Pow(x, y)     // x^y
+math.Pi            // 3.14159265...
+math.MinInt64      // -9,223,372,036,854,775,808
+```
+
+### Strings Package
+
+```go
+strings.Split(s, " ")      // Split string
+strings.Fields(s)          // Split on whitespace
+strings.Join(slice, " ")   // Join with separator
+strings.Index(s, substr)   // Find substring
+```
+
+### Init Function
+
+Called after variable declarations, after all imported packages initialized:
+
+```go
+func init() {
+    if user == "" {
+        log.Fatal("$USER not set")
+    }
+}
+```
+
+**Note:** `init` is a niladic function (Function does not have an argument).
+
+---
+
+## Advanced Concepts
+
+### UTF-8 Encoding
+
+- UTF-8 is an encoding system for Unicode
+- Variable length: 1-4 bytes per character
+- ASCII characters: 1 byte
+- Most common approach: efficient memory use
+
+| Concept | What it is | How it works |
+|---------|-----------|--------------|
+| ASCII | Basic keyboard for English | 128 characters (7 bits) |
+| Unicode | Universal character catalog | Unique number for every character/emoji/symbol |
+| UTF-8 | Smart storage method | Variable 1-4 bytes per character |
+
+### SHA256 Checksum
+- To check that what was received is what was intended. shasum -a 256 path/to/file 24325uib3654356rhrh897r8h78rthrthr
+Verify file integrity:
+```bash
+shasum -a 256 path/to/file
+```
+
+### Character Increment
+
+```go
+var c rune = 'A'
+c++  // 'B'
+
+// Example pattern
+// n=4
+// A
+// B B
+// C C C
+// D D D D
+```
+
+### Documentation (godoc)
+
+```bash
+godoc -http :8080  # Run local doc server
+```
+
+Comments above functions generate documentation. Also use `doc.go` files.
+
+### Stringer Interface
+
+The `Stringer` interface allows types to describe themselves as strings. The `fmt` package (and many others) looks for this interface when printing values.
+
+```go
+// Defined in fmt package
+type Stringer interface {
+    String() string
+}
+```
+
+**Example implementation:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "strconv"
+)
+
+type book struct {
+    title string
+}
+
+func (b book) String() string {
+    return fmt.Sprint("The title of the book is ", b.title)
+}
+
+type count int
+
+func (c count) String() string {
+    return fmt.Sprint("This is the number ", strconv.Itoa(int(c)))
+}
+
+func main() {
+    b := book{
+        title: "West With The Night",
+    }
+    var n count = 42
+
+    // Both print using their custom String() methods
+    fmt.Println(b)  // The title of the book is West With The Night
+    fmt.Println(n)  // This is the number 42
+}
+```
+
+### Writer Interface
+
+The `io.Writer` interface is one of the most important interfaces in Go's standard library. It represents any type that can write bytes.
+
+```go
+// Defined in io package
+type Writer interface {
+    Write(p []byte) (n int, err error)
+}
+```
+
+**Example usage:**
+
+```go
+package main
+
+import (
+    "bytes"
+    "fmt"
+    "io"
+    "log"
+    "os"
+)
+
+type person struct {
+    first string
+}
+
+// writeOut accepts any type that implements io.Writer
+func (p person) writeOut(w io.Writer) {
+    w.Write([]byte(p.first))
+}
+
+func main() {
+    p := person{
+        first: "Jenny",
+    }
+
+    // Write to a file
+    f, err := os.Create("output.txt")
+    if err != nil {
+        log.Fatalf("error %s", err)
+    }
+    defer f.Close()
+
+    // Write to a buffer
+    var b bytes.Buffer
+
+    // Same method works with both file and buffer!
+    p.writeOut(f)      // Writes to file
+    p.writeOut(&b)     // Writes to buffer
+    fmt.Println(b.String())  // Prints: Jenny
+}
+```
+
+**Why this is powerful:**
+- Your code doesn't care if it's writing to a file, network connection, or in-memory buffer
+- Any type that implements `Write([]byte) (int, error)` can be used
+- This is polymorphism in action
+
+## Summary
+
+Go is a modern, statically-typed language designed for:
+- **Simplicity**: Clean syntax, easy to learn
+- **Concurrency**: Built-in goroutines and channels
+- **Performance**: Compiled, efficient execution
+- **Reliability**: Strong typing, garbage collection
+- **Practicality**: Great standard library, fast compilation
+
+**Core Philosophy:**
+- Less is more (minimalist design)
+- Composition over inheritance
+- Explicit over implicit
+- Concurrency is not parallelism
+- Don't communicate by sharing memory; share memory by communicating
+
+**Learn More:**
+- [Go Proverbs](https://go-proverbs.github.io/)
+- [Effective Go](https://go.dev/doc/effective_go)
+- [Go by Example](https://gobyexample.com/)
+- [A Tour of Go](https://go.dev/tour/)
+- [Rob Pike - Concurrency is not Parallelism](https://go.dev/talks/2012/concurrency.slide#28)
+- [Go Blog - Context](https://go.dev/blog/context)
