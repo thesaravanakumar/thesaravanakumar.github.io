@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* rehype-pretty-code basic styles */
+.rehype-pretty-code {
+  overflow: auto;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+}
+.rehype-pretty-code pre {
+  margin: 0;
+  padding: 1rem;
+}
+.rehype-pretty-code .line {
+  display: block;
+  padding: 0 0.5rem;
+}
+.rehype-pretty-code .line--highlighted {
+  background: rgba(255, 255, 255, 0.02);
+}
+.rehype-pretty-code .word--highlighted {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 2px;
+  padding: 0 0.2rem;
+}

@@ -32,7 +32,7 @@ export default (props) => <ArticleLayout article={article} {...props} />
 #### Design principle of Perl:
 > Things that are different should look different
 
-```pl
+```perl
 #!/usr/bin/perl
 
 # scalar
@@ -72,7 +72,7 @@ print $len;
 ```
 
 ---
-```pl
+```perl
 # e for execute
 perl -e 'print "hello\n"' 
 # E for enabling features "say" is for adding new line
@@ -83,7 +83,7 @@ hello
 HELLO
 ```
 #### File Structure
-```pl
+```perl
 #!/usr/bin/env perl
 
 use strict; # pragmas
@@ -95,14 +95,14 @@ print $test . "Hello world!"; #concatinate
 1; # returns true (If not used it will throw a warning if you are using a script inside a script)
 ```
 Scalars - single unit of data, they can hold one of undefined, number, string or reference
-```pl
+```perl
 $num = 1;
 $string = "hello"
 print $string . $num . "\n";
 hello1\n
 ```
 #### Debugging
-```pl
+```perl
 use strict;
 use warnings;
 use Data::Dumper;
@@ -115,7 +115,7 @@ print Dumper(%hash); # $VAR1 = 'Larry'; $VAR2 = 67; $VAR3 = 'Ken'; $VAR4 = 79;
 use Data::Dumper;
 ```
 #### Arrays
-```pl
+```perl
 my @test = qw/one two three/; # qw means quoted words
 VAR1 = 'one' VAR2 = 'two' VAR3 = 'three'
 print Dumper($test[-1]); # last item in array
@@ -140,7 +140,7 @@ my test = (4,2,10,22,30);
 - Key value pair.
 - Order is not preserved, never!
 - Keys are unique so values are overwrittern if there is same key name.
-```pl
+```perl
 my %map = (
    a => 20,
    b => "hello",
@@ -175,7 +175,7 @@ delete $map{c}; # deletes an item from a hash
 > pass by value = you are duplicating the value in memory
 > pass by reference = you are passing the location of the data structure in your memory
 
-```pl
+```perl
 my %hash = (a=>1,b=>2);
 my @array = qw/string1 string2/;
 my $scalar = 32;
@@ -250,7 +250,7 @@ VAR1 = 'HASH; # shows what references you are working on...
 - Same as Function.
 - A group of statements encapsulated in a single function to perform a specific task.
 - Perl is going to return the last value you worked with in a function so no need to ```return```.
-```pl
+```perl
 sub test {
    my $name = $_[0]; # access the items in the array
    (or)
@@ -285,7 +285,7 @@ sub test ($name = undef){} # optional parameter it can be undef or defaults to a
 #### Scopes
 - ```my``` - Local
 - ```our``` - Global
-```pl
+```perl
 script.pl
 our $name = "Bob"; #my won't work
 
@@ -311,7 +311,7 @@ test();
 - ```$@``` - Holds the value of the exception.
 - ```warn``` - does not stops execution after this line.
 - ```eval``` - Handles exception.
-```pl
+```perl
 my $test = "world";
 eval {
    die 'cannot go on';
@@ -321,7 +321,7 @@ print "hello $test: $@\n";
 # hello world cannot go on at script.pl line 5.
 ```
 #### Logical Operation
-```pl
+```perl
 say 20 <=> 40
 # 0 if equal, 1 if lhs is larger, -1 if rhs is larger
 # for strings 'a' eq 'b' (eq, ne, lt, gt, ge, le) 
@@ -331,7 +331,7 @@ my $str = "h" x 5;
 say $str; # hhhhh
 ```
 #### Conditional
-```pl
+```perl
 if(){}
 elseif(){}
 else{}
@@ -343,7 +343,7 @@ $test = 2 unless 2 > 1;
 ```
 #### Loops
 - If you are modifying a variable inside a loop it will affect the variable outside the loop. 
-```pl
+```perl
 while(){}
 for(init;cond;inc/dec){}
 
@@ -360,7 +360,7 @@ foreach my $item(@list){
 - A string of characters and symbols that defines a pattern you want to match against your string value.
 - Perl is very powerful in regex.
 
-```pl
+```perl
 $test =~ /dog/   # looks for a pattern
 
 # m modifier
@@ -412,7 +412,7 @@ $VAR3 = ['c','a'];
 ##### map
 - Executes a code for every item you give it.
 - It's not gonna modify the items you give it. Original list remains same, it just copies.
-```pl
+```perl
 my @list = qw/ cat dog /;
 my @new_list = map {
    uc $_
@@ -421,7 +421,7 @@ say Dumper(\@new_list); # VAR1 = [CAT, DOG];
 ```
 ##### grep
 - Instead of modifying the list like map it will compare something if its true it will give it to new list.
-```pl
+```perl
 my @list = qw/ cat dog /;
 my @new_list = grep {
    $_ eq 'cat'
@@ -430,12 +430,12 @@ say Dumper(\@new_list); # VAR1 = [cat];
 ```
 ##### split
 - It takes a pattern and a string and it splits the given string based on that pattern.
-```pl
+```perl
 my @parts = split m/e/, 'test_test';
 sat Dumper \@parts;  # VAR1 = ['t', 'st_t, 'st'];  // for spliting every character
 ```
 ##### join
-```pl
+```perl
 my @parts = qw/ a b c d e /;
 my $string = join '_', @parts
 sat Dumper \@string; # VAR1 = 'a_b_c_d_e'     '' for abcde
@@ -451,7 +451,7 @@ sat Dumper \@string; # VAR1 = 'a_b_c_d_e'     '' for abcde
 - ```say(time)``` - prints current time
 
 #### Special Reserved Characters
-```pl
+```perl
 say Dumper \@ARGV; # argument values while executing 
 -----------
 per script.pl 1 a b c
@@ -470,7 +470,7 @@ say Dumper $$; # gives the process id $VAR1 = 9069;
 
 #### OOP
 - It's a concept of structuring your data and logic in object, each object has properties and methods defined by their classes.
-```pl
+```perl
 ---> Dog.pm
 package Dog; # package itself is a class
 use strict;
@@ -508,7 +508,7 @@ sub DESTROY { # cleaning up instances before picked up by garbage collectors
 
 1;
 ```
-```pl
+```perl
 ---> script.pl
 use strict;
 use warnings;
@@ -530,11 +530,11 @@ say $Dog->get_height_and_weight; #method
 ```
 ##### Inheritance
 - Parent class properties and methods can be accessible by the child class by inheriting.
-```pl
+```perl
 package <Child Class Name>
 @ISA = qw(Parent Class Name)
 ```
-```pl
+```perl
 ---> test.pm
 package test;
 sub new {
@@ -554,14 +554,14 @@ sub getSkill {
 }
 1;
 ```
-```pl
+```perl
 ---> testChild.pm
 use testChild;
 use test; # inheriting from parent
 
 our @ISA = qw(test);
 ```
-```pl
+```perl
 ---> testC.pl
 use testChild;
 my $obj = new testChild("Java");
@@ -572,7 +572,7 @@ print $obj->getSkill();
 - ```require``` - requiring a module at run time.
 - ```use``` - using a module at compile time.
 
-```pl
+```perl
 if (1>2){
    use IDoNotExist; # errors out at compilation
    require IDoNotExist; 
@@ -584,7 +584,7 @@ If you use ```use``` what will happan?
 
 What happans behind the scenes?
 - perl is calling require, passing the module name 
-```pl
+```perl
 BEGIN {
    require 'Data/Dumper.pm';
    Data::Dumper->import() # get all methods if not specified
@@ -593,7 +593,7 @@ BEGIN {
 Data::Dumper::Dumper  calling Dumper method from Data package Dumper module
 
 #### Exporter and method types
-```pl
+```perl
 ---> OurModule.pm
 package OurModule;
 use strict;
@@ -606,7 +606,7 @@ sub add_nums {
    return $num1+$num2;
 }
 ```
-```pl
+```perl
 --->script.pl
 use strict;
 use warnings;
@@ -627,7 +627,7 @@ say add_nums(3,2);
 - ```Try::Tiny::SmartCatch``` - catch errors in different blocks by package name, regex and handle unknown exceptions.
 - ```Exception::Class``` - allows you to create custom named exception objects with attributes and other stuff.
 
-```pl
+```perl
 use Try::Tiny::SmartCatch;
 use Exception::Class(
       'MyException',
@@ -653,7 +653,7 @@ catch_default sub {
 };
 ```
 #### Web Requests with Mojo::UserAgent
-```pl
+```perl
 use Mojo::UserAgent;
 use Data::Dumper;
 
@@ -664,7 +664,7 @@ say $Result->is_success;
 say $Result->code;
 ```
 promises alows us to make many requests in parallel without blocking the execution of the code
-```pl
+```perl
 use Mojo::Promise;
 use Mojo::UserAgent;
 use Data::Dumper;
@@ -684,7 +684,7 @@ Mojo::Promise->all(@promises){
 }
 ```
 #### Reading and Writing Files
-```pl
+```perl
 # writing
 open( my $FH, '>', './test.txt');
 print $FH "hello"; # > overwritten, >> appends
@@ -710,7 +710,7 @@ say content;
 #### Run system commands
 - Perl allows you to call system commands.
 - It can capture the output of the sys command.
-```pl
+```perl
 # capturing
 `touch ./$_.txt` for (1 .. 10);
 my $output = `ls ./`;
@@ -724,7 +724,7 @@ exec('ls', './');
 ```
 ---
 #### How to add a long string?
-```pl
+```perl
 my $big_string = <<"END"; # define the word that is gonna end the long string
 This is a bunch
 of info
@@ -739,7 +739,7 @@ END
 - %f - floating point (Decimal Notation)
 - %e - floating point (Scientific Notation)
 
-```pl
+```perl
 my $minutes = sprintf( "%d", $seconds / 60 );
 ```
 - ```next``` - skips the rest of the code and goes to the loop, like **continue** in other languages.
@@ -750,7 +750,7 @@ my $minutes = sprintf( "%d", $seconds / 60 );
 
 #### Formats
 - Display an output in certain pattern
-```pl
+```perl
    format STDOUT =
    @<<<<<<   @||||||   @>>>>>>
    "left",   "middle", "right"
@@ -760,7 +760,7 @@ Output:
 
 ```
 #### sending email using cpan
-```pl
+```perl
 #!/usr/bin/perl
 use strict; 
 use warnings;
@@ -784,7 +784,7 @@ $mail->send;
 #### DBI Access
 - Used for DB operations.
 - Driver name, database name, user id nd password should be known.
-```pl
+```perl
 use DBI;
 my $driver = "oracle"
 my $database = "Alpha";
@@ -803,7 +803,7 @@ $dbh->commit or die $DBI::errstr;
 ##### splice
 - add or remove elements anywhere in an array
 - syntax: splice ARRAY or EXPR, OFFSET,LENGTH,LIST
-```pl
+```perl
 @food = ('meat', 'oats', 'beans', 'eggs', 'bread');
 splice @food, 4, 2, 'Cereals', 'redmeat'; #removes food[4] and food[5] and replaces them.
 ```
