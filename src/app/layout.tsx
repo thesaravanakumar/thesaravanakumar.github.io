@@ -63,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${satoshi.variable} h-full scroll-smooth`}>
+    <html lang="en" className={`${satoshi.variable} h-full scroll-smooth dark`} style={{ colorScheme: 'dark' }}>
       <body className="h-full w-full overflow-x-hidden bg-white text-gray-1000 selection:bg-green-400 selection:text-gray-900 dark:bg-gray-1000 dark:text-white">
         <ThemeProvider attribute="class" defaultTheme="dark">
           {children}
