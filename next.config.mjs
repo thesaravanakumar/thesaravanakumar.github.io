@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-// import remarkGfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm'
 import createMDX from '@next/mdx'
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   experimental: {
-    serverActions: true,
+    serverActions: {},
   },
   images: {
     unoptimized: true,
@@ -20,7 +20,7 @@ const rehypePrettyCode = require('rehype-pretty-code').default || require('rehyp
 const withMDX = createMDX({
   options: {
     extension: /\.mdx?$/,
-    // remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
       [
         rehypePrettyCode,

@@ -76,7 +76,7 @@ export const ArticleLayout = async ({ children, article }: any) => {
               <div className="relative hidden w-24 border-r border-gray-500 bg-dotted bg-center before:absolute before:-top-[1px] before:right-0 before:-z-10 before:h-[1px] before:w-[100vw] before:bg-gray-500 before:content-[''] min-[900px]:block"></div>
 
               {/* Main content */}
-              <div className="flex-1 overflow-auto p-6 xs:p-10 min-[900px]:p-16">
+              <div className="flex-1 article-content overflow-auto p-6 xs:p-10 min-[900px]:p-16">
                 {children}
               </div>
             </div>

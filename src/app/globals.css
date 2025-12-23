@@ -24,3 +24,27 @@
   border-radius: 2px;
   padding: 0 0.2rem;
 }
+
+/* Article table styles: center table, white borders, bold first row */
+.article-content table {
+  margin: 1rem auto; /* center */
+  border-collapse: collapse;
+  border: 1px solid #fff; /* white border */
+}
+.article-content th,
+.article-content td {
+  border: 1px solid #fff; /* white border */
+  padding: 0.5rem 0.75rem;
+  text-align: center; /* center cell content */
+}
+/* Prefer thead, but fall back to first row if thead isn't present */
+.article-content thead th,
+.article-content tr:first-child th,
+.article-content tr:first-child td {
+  font-weight: 700;
+}
+/* Make sure table header background contrasts if needed */
+.article-content thead th,
+.article-content tr:first-child th {
+  background: transparent;
+}
