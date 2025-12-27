@@ -13,13 +13,13 @@ export const works = [
     name: 'Skills',
     description: (
       <>
-        <strong>Programming Languages:</strong> Golang (GO), C++, Node.js, Perl
+        <strong>Programming Languages:</strong> Golang (GO), Node.js, C++, Perl
         <br />
         <strong>Cloud Platforms:</strong> Google Cloud Platform (GCP), Aviatrix
         <br />
-        <strong>Tools and Technologies:</strong> Terraform, OpenShift, Tekton CI/CD, Grafana, Podman, Docker, Kubernetes, Bash, Yaml, Jira
+        <strong>DevOps & Infrastructure:</strong> Terraform, OpenShift, Tekton CI/CD, Dynatrace, Podman/Docker, Kubernetes, Bash, Yaml, Git
         <br />
-        <strong>Database:</strong> PostgreSQL
+        <strong>Databases:</strong> Firestore, PostgreSQL
         <br />
         <strong>Others:</strong> Unity, Unreal Engine, Blender
       </>
