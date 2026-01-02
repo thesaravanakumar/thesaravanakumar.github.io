@@ -10,8 +10,6 @@ This is a **portfolio website** that demonstrates:
 - **Fast load times** and optimized performance
 - **Type-safe development** with TypeScript across the stack
 
----
-
 ## Tech Stack
 
 | Layer | Technologies |
@@ -39,8 +37,6 @@ This is a **portfolio website** that demonstrates:
 - CSS-in-utility approach with Tailwind
 - Development and production modes with hot reload
 
----
-
 ## Project Architecture
 
 ```
@@ -60,8 +56,6 @@ src/
     ├── spotify.ts         # Spotify API integration
     └── helpers.ts         # Common utilities
 ```
-
----
 
 ## Getting Started
 
@@ -92,16 +86,12 @@ npm run build
 npm run start
 ```
 
----
-
 ## Featured Sections
 
 - **Articles**: In-depth technical writing on infrastructure, programming, and cloud technologies
 - **Work**: Portfolio of completed projects and experiments
 - **Experiments**: Interactive demos showcasing cloud platforms (AWS, Azure, GCP, Aviatrix)
 - **Listening**: Real-time Spotify integration showing currently playing music
-
----
 
 ## Technical Highlights
 
@@ -112,8 +102,6 @@ npm run start
 **Scalable**: Modular architecture, easy to add features and content
 **Modern Stack**: Using latest React and Next.js patterns
 
----
-
 ## Key Dependencies
 
 - `next` - React framework with SSR/SSG
@@ -121,8 +109,6 @@ npm run start
 - `typescript` - Static type checking
 - `tailwindcss` - Utility-first CSS
 - `mdx-js` - MDX support for rich content
-
----
 
 ## Contributing
 
