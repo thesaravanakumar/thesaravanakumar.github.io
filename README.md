@@ -1,7 +1,5 @@
 # Saravana Kumar's Portfolio & Project Hub
 
-> **Full-Stack Developer | Modern Web Technologies Enthusiast | Open Source Contributor**
-
 Welcome to my personal portfolio and experimentation hub—a showcase of professional-grade web development built with cutting-edge technologies and best practices.
 
 ---
