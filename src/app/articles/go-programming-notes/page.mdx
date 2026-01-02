@@ -24,9 +24,6 @@ export const metadata = {
 
 export default (props) => <ArticleLayout article={article} {...props} />
 
-
-# Complete Go Programming Notes
-
 <details>
   <summary style={{ cursor: 'pointer' }}>Table of Contents</summary>
 
@@ -200,6 +197,7 @@ Created at Google by:
 <div style={{ textAlign: 'center' }}>
   <img src={img2.src} alt="Go notes diagram 2" style={{ maxWidth: '100%', height: 'auto' }} />
 </div>
+
 
 ## Basics
 
@@ -989,6 +987,10 @@ A := "hello"
 fmt.Printf("%d %c\n", A[i], A[i])  // %d = ASCII, %c = character
 ```
 
+### Rune
+
+A Go string is a read-only slice of bytes. The language and the standard library treat strings specially - as containers of text encoded in UTF-8. In other languages, strings are made of "characters". In Go, the concept of a character is called a rune - it's an integer that represents a Unicode code point.
+
 ---
 
 ## Pointers
@@ -1128,7 +1130,7 @@ Defining behavior without implementation. This is the primary job of an interfac
 
 ### Methods
 
-Go doesn't have classes, but you can define methods on types.
+Go does not have classes. However, you can define methods on types.
 
 ```go
 type rect struct {
@@ -1447,13 +1449,13 @@ Go is OOP? **Yes and no** — it provides its own unique tools to achieve the sa
 
 **Summary:** Go is OOP-like in spirit but different in implementation. It achieves encapsulation, code reuse, and polymorphism through structs, composition, and implicit interfaces rather than traditional OOP mechanisms.
 
-### Empty Interface
+### Empty Interface (interface{})
 
-- The empty interface `interface{}` (or `any` in Go 1.18+) can hold any type.
-- The interface type that specifies zero methods is known as the empty interface:
-An empty interface may hold values of any type. (Every type implements at least zero methods.)
-Empty interfaces are used by code that handles values of unknown type. For example, fmt.Print takes any number of arguments of type interface{}.
+- An empty interface may hold values of any type. (Every type implements at least zero methods.)
+- Empty interfaces are used by code that handles values of unknown type. For example, `fmt.Print` takes any number of arguments of type `interface{}`.
+- If the concrete value inside the interface itself is nil, the method will be called with a nil receiver.
 
+> In some languages this would trigger a null pointer exception, but in Go it is common to write methods that gracefully handle being called with a nil receiver.
 ```go
 func describe(i interface{}) {
     fmt.Printf("(%v, %T)\n", i, i)
@@ -1468,6 +1470,57 @@ func main() {
     
     i = "hello"
     describe(i)      // (hello, string)
+}
+```
+
+### Type Assertions
+
+A type assertion provides access to an interface value's underlying concrete value.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var i interface{} = "hello"
+
+	s := i.(string) // .(type) ...
+	fmt.Println(s)
+
+	s, ok := i.(string)
+	fmt.Println(s, ok)
+
+	f, ok := i.(float64)
+	fmt.Println(f, ok)
+
+	f = i.(float64) // panic
+	fmt.Println(f)
+}
+```
+
+### Type Switches
+
+A type switch is a construct that permits several type assertions in series.
+
+```go
+import "fmt"
+
+func do(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Twice %v is %v\n", v, v*2)
+	case string:
+		fmt.Printf("%q is %v bytes long\n", v, len(v))
+	default:
+		fmt.Printf("I don't know about type %T!\n", v)
+	}
+}
+
+func main() {
+	do(21)
+	do("hello")
+	do(true)
 }
 ```
 
@@ -2044,20 +2097,27 @@ func isTrue(b bool) (bool, error) {
 ### Custom Error Types
 
 ```go
-type myError struct {
-    time int
-    err  error
+type MyError struct {
+	When time.Time
+	What string
 }
 
-func (e myError) Error() string {
-    return fmt.Sprintf("%v Error dude :( %v", e.time, e.err)
+func (e *MyError) Error() string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
 }
 
-func isTrue(b bool) (bool, error) {
-    if !b {
-        return false, myError{10, fmt.Errorf("It was False")}
-    }
-    return true, nil
+func run() error {
+	return &MyError{
+		time.Now(),
+		"it didn't work",
+	}
+}
+
+func main() {
+	if err := run(); err != nil {
+		fmt.Println(err)
+	}
 }
 ```
 
@@ -2372,7 +2432,11 @@ Comments above functions generate documentation. Also use `doc.go` files.
 
 ### Stringer Interface
 
-The `Stringer` interface allows types to describe themselves as strings. The `fmt` package (and many others) looks for this interface when printing values.
+The `Stringer` interface allows types to describe themselves as strings. `fmt.Println` looks for any type that implements the Stringer interface (i.e., has a `String()` method) and uses it to get a string representation.
+
+If a type (like `Person`) didn't have a `String()` method, `Println` would print something like `{Arthur Dent 42}` instead.
+
+This is one of Go's most powerful patterns—interface-based polymorphism.
 
 ```go
 // Defined in fmt package
@@ -2386,34 +2450,20 @@ type Stringer interface {
 ```go
 package main
 
-import (
-    "fmt"
-    "strconv"
-)
+import "fmt"
 
-type book struct {
-    title string
+type Person struct {
+    Name string
+    Age  int
 }
 
-func (b book) String() string {
-    return fmt.Sprint("The title of the book is ", b.title)
-}
-
-type count int
-
-func (c count) String() string {
-    return fmt.Sprint("This is the number ", strconv.Itoa(int(c))) // strconv.ParseInt(a,64)
+func (p Person) String() string {
+    return fmt.Sprintf("%s (%d years old)", p.Name, p.Age)
 }
 
 func main() {
-    b := book{
-        title: "West With The Night",
-    }
-    var n count = 42
-
-    // Both print using their custom String() methods
-    fmt.Println(b)  // The title of the book is West With The Night
-    fmt.Println(n)  // This is the number 42
+    p := Person{Name: "Arthur Dent", Age: 42}
+    fmt.Println(p)  // Arthur Dent (42 years old)
 }
 ```
 
