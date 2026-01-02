@@ -1,12 +1,6 @@
-# Saravana Kumar's Portfolio & Project Hub
-
-Welcome to my personal portfolio and experimentation hub—a showcase of professional-grade web development built with cutting-edge technologies and best practices.
-
----
-
 ## About This Project
 
-This is a **production-ready portfolio website** that demonstrates:
+This is a **portfolio website** that demonstrates:
 
 - **High-performance static site generation** with server-side rendering
 - **Beautiful, responsive UI** with modern design patterns
