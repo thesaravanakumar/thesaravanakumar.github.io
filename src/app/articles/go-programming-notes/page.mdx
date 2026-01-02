@@ -25,6 +25,7 @@ export const metadata = {
 export default (props) => <ArticleLayout article={article} {...props} />
 
 
+# Complete Go Programming Notes
 
 <details>
   <summary style={{ cursor: 'pointer' }}>Table of Contents</summary>
@@ -142,7 +143,6 @@ export default (props) => <ArticleLayout article={article} {...props} />
 
 </details>
 
-
 ## Introduction & History
 
 ### What is Go?
@@ -193,13 +193,13 @@ Created at Google by:
 
 **Fun Fact:** In the Go playground, time begins at `2009-11-10 23:00:00 UTC` - Go's birthday! The announcement was titled "Hey! Ho! Let's Go!" (a Ramones song reference).
 
+
 <div style={{ textAlign: 'center' }}>
   <img src={img1.src} alt="Go notes diagram 1" style={{ maxWidth: '100%', height: 'auto' }} />
 </div>
 <div style={{ textAlign: 'center' }}>
   <img src={img2.src} alt="Go notes diagram 2" style={{ maxWidth: '100%', height: 'auto' }} />
 </div>
-
 
 ## Basics
 
@@ -251,10 +251,20 @@ bool
 string
 
 // Integers (unsigned)
-uint uint8 uint16 uint32 uint64 uintptr
+// Note: ranges assume typical implementation on common architectures
+uint      // platform-dependent (32 or 64 bit)
+uint8  (0 to 255)
+uint16 (0 to 65535)
+uint32 (0 to 4294967295)
+uint64 (0 to 18446744073709551615)
+uintptr // platform-dependent (pointer-sized unsigned int)
 
 // Integers (signed)
-int int8 int16 int32 int64
+int    // platform-dependent (32 or 64 bit)
+int8   (-128 to 127)
+int16  (-32768 to 32767)
+int32  (-2147483648 to 2147483647)
+int64  (-9223372036854775808 to 9223372036854775807)
 
 // Floating point
 float32 float64
@@ -348,8 +358,14 @@ fmt.Scanf("%d %s", &a, &name)
 - Advanced input reading capabilities
 - Reads entire line including spaces
 ```go
+import "bufio"
+reader := bufio.NewReader(os.Stdin)
+reader.Scan() 
+input := reader.Text()
+fmt.Println("You typed: %q",input)
+
 reader := bufio.NewReader(os.Stdin) 
-input, _ := reader.ReadString('\n')  // Reads entire line including spaces
+input, _ := reader.ReadString('\n')  // Reads entire line including spaces, stops on new line
 ```
 
 ### Output (Printing)
@@ -377,6 +393,30 @@ fmt.Println("Hello", "World!")  // Output: Hello World!\n
 fmt.Printf("Name: %s, Age: %d\n", "Alice", 25)
 fmt.Printf("%d %c\n", A[i], A[i])  // %d = ASCII value, %c = character
 ```
+
+#### Format verbs (common)
+
+| Verb | Meaning | Example | Output |
+|---|---:|---|---|
+| `%v` | default format | `fmt.Printf("%v\n", 123)` | `123` |
+| `%+v` | include struct field names | `fmt.Printf("%+v\n", struct{A int}{A:1})` | `{A:1}` |
+| `%#v` | Go-syntax representation | `fmt.Printf("%#v\n", []int{1,2,3})` | `[]int{1, 2, 3}` |
+| `%T` | type of the value | `fmt.Printf("%T\n", 123)` | `int` |
+| `%t` | boolean | `fmt.Printf("%t\n", true)` | `true` |
+| `%b` | base 2 | `fmt.Printf("%b\n", 12)` | `1100` |
+| `%c` | char (unicode) | `fmt.Printf("%c\n", 65)` | `A` |
+| `%d` | base 10 integer | `fmt.Printf("%d\n", 123)` | `123` |
+| `%o` | octal | `fmt.Printf("%o\n", 8)` | `10` |
+| `%x`, `%X` | hex (lower/upper) | `fmt.Printf("%x\n", 255)` | `ff` |
+| `%f` | decimal point for floats | `fmt.Printf("%.2f\n", 3.14159)` | `3.14` |
+| `%e`, `%E` | scientific notation | `fmt.Printf("%e\n", 123400000.0)` | `1.234000e+08` |
+| `%g` | compact floating format | `fmt.Printf("%g\n", 1234.5)` | `1234.5` |
+| `%s` | string | `fmt.Printf("%s\n", "hello")` | `hello` |
+| `%q` | quoted string | `fmt.Printf("%q\n", "hello")` | `"hello"` |
+| `%p` | pointer (address) | `fmt.Printf("%p\n", &x)` | `0xc000...` |
+| `%U` | Unicode format (e.g. U+263A) | `fmt.Printf("%U\n", '☺')` | `U+263A` |
+
+You can also use flags, width and precision with these verbs, for example: `%5d`, `%-10s`, `%.2f`, `%05d`.
 
 #### `fmt.Sprint`
 - Concatenates values into string without formatting
@@ -505,7 +545,7 @@ switch {
 **Features:**
 - Can use commas to separate multiple expressions
 - `default` is optional
-- `break` and `fallthrough` keywords available
+- `break` and `fallthrough`(executes just the next case as well) keywords available
 
 ### Loops
 
@@ -625,6 +665,7 @@ func split(sum int) (x, y int) {
 A closure is a function that remembers variables from its creation environment. Closures are particularly useful when working with [goroutines](#goroutines--waitgroups) and callbacks.
 
 ```go
+// i is used inside the func from outside func
 func intSeq() func() int { // the Factory
     i := 0 // Blueprint: "Every machine gets a private memory 'i' starting at 0."
     
@@ -806,6 +847,11 @@ slices.Equal(t, t2)            // Compare slices
 
 // Remove element
 a = append(a[:2], a[3:]...)    // Second arg must be unpacked with ...
+
+// underlying array is copied, so that's why initializing the capacity while compile time is faster
+s:=[]int{}                     // len:0 cap:0
+s=append(s,1)                  // len:1 cap:1
+s=append(s,2,3,4,5)            // len:5 cap:6 <-1+5
 ```
 
 #### Important: Slices are Reference Types
@@ -2356,7 +2402,7 @@ func (b book) String() string {
 type count int
 
 func (c count) String() string {
-    return fmt.Sprint("This is the number ", strconv.Itoa(int(c)))
+    return fmt.Sprint("This is the number ", strconv.Itoa(int(c))) // strconv.ParseInt(a,64)
 }
 
 func main() {
