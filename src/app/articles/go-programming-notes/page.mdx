@@ -110,6 +110,10 @@ export default (props) => <ArticleLayout article={article} {...props} />
     - [Select](#select)
     - [Fan-In Pattern](#fan-in-pattern)
     - [Fan-Out Pattern](#fan-out-pattern)
+    - [Timeouts](#timeouts)
+    - [Non-Blocking Channel Operations](#non-blocking-channel-operations)
+    - [WaitGroups Example](#waitgroups-example)
+    - [Rate Limiting](#rate-limiting)
     - [Context](#context)
 13. [Error Handling](#error-handling)
     - [Error Interface](#error-interface)
@@ -132,11 +136,27 @@ export default (props) => <ArticleLayout article={article} {...props} />
     - [Init Function](#init-function)
 16. [Advanced Concepts](#advanced-concepts)
     - [UTF-8 Encoding](#utf-8-encoding)
-    - [SHA256 Checksum](#sha256-checksum)
     - [Character Increment](#character-increment)
     - [Documentation](#documentation-godoc)
+    - [Sorting](#sorting)
+    - [Sorting by Functions](#sorting-by-functions)
     - [Stringer Interface](#stringer-interface)
     - [Writer Interface](#writer-interface)
+    - [Command-Line Arguments](#command-line-arguments)
+    - [Command-Line Flags](#command-line-flags)
+    - [Environment Variables](#environment-variables)
+    - [URL Parsing](#url-parsing)
+    - [Base64 Encoding](#base64-encoding)
+    - [SHA256 Hashes](#sha256-hashes)
+    - [Time](#time)
+    - [Signals](#signals)
+    - [JSON](#json)
+    - [Templates](#templates)
+    - [File I/O](#file-io)
+      - [Reading Files](#reading-files)
+      - [Writing Files](#writing-files)
+    - [Directories](#directories)
+    - [TCP Server](#tcp-server)
 
 </details>
 
@@ -1528,6 +1548,8 @@ func main() {
 
 ## Generics
 
+Starting with version 1.18, Go has added support for generics, also known as type parameters.
+
 ### Type Parameters
 - Go functions can be written to work on multiple types using type parameters. The type parameters of a function appear between brackets, before the function's arguments.
 - Comparable is a useful constraint that makes it possible to use the == and != operators on values of the type. func Index[T comparable](s []T, x T) int
@@ -1800,6 +1822,10 @@ count: 5
 
 ### Channels
 
+Channels are the pipes that connect concurrent goroutines. You can send values into channels from one goroutine and receive those values into another goroutine.
+
+Channels are typed by the values they convey.
+
 > "Don't communicate by sharing memory; share memory by communicating."
 
 #### Won't work
@@ -1840,28 +1866,30 @@ func main() {
 #### Directional Channels
 
 ```go
-// Send-only
-func foo(c chan<- int, wg *sync.WaitGroup) {
-    c <- 30
-    wg.Done()
+package main
+
+import "fmt"
+
+func ping(pings chan<- string, msg string) {
+    pings <- msg
 }
 
-// Receive-only
-func bar(c <-chan int, wg *sync.WaitGroup) {
-    fmt.Println(<-c)
-    wg.Done()
+func pong(pings <-chan string, pongs chan<- string) {
+    msg := <-pings
+    pongs <- msg
 }
 
 func main() {
-    c := make(chan int)
-    var wg sync.WaitGroup
-    wg.Add(2)
-    
-    go foo(c, &wg)
-    go bar(c, &wg)
-    
-    wg.Wait()
+    pings := make(chan string, 1)
+    pongs := make(chan string, 1)
+    ping(pings, "passed message")
+    pong(pings, pongs)
+    fmt.Println(<-pongs)
 }
+```
+```sh
+$ go run channel-directions.go
+passed message
 ```
 
 #### Range Over Channels
@@ -1884,6 +1912,8 @@ func bar(c <-chan int, wg *sync.WaitGroup) {
 ```
 
 ### Select
+
+Go's `select` lets you wait on multiple channel operations. Combining goroutines and channels with select is a powerful feature of Go.
 
 The `select` statement lets a goroutine wait on multiple communication operations. It blocks until one of its cases can proceed, then executes that case. If multiple cases are ready, it chooses one at random.
 
@@ -1979,6 +2009,65 @@ func main() {
 ```
 Rob pike - https://go.dev/talks/2012/concurrency.slide#28
 
+### Timeouts
+
+Timeouts are important for programs that connect to external resources or that otherwise need to bound execution time. Implementing timeouts in Go is easy and elegant thanks to channels and select.
+
+```go
+c1 := make(chan string, 1)
+go func() {
+    time.Sleep(2 * time.Second)
+    c1 <- "result 1"
+}()
+
+select {
+case res := <-c1:
+    fmt.Println(res)
+case <-time.After(1 * time.Second):
+    fmt.Println("timeout 1")
+}
+```
+
+### Non-Blocking Channel Operations
+
+Basic sends and receives on channels are blocking. However, we can use select with a default clause to implement non-blocking sends, receives, and even non-blocking multi-way selects.
+
+```go
+select {
+case msg := <-messages:
+    fmt.Println("received message", msg)
+default:
+    fmt.Println("no message received")
+}
+```
+
+### WaitGroups Example
+
+```go
+for i := 1; i <= 5; i++ {
+    wg.Go(func() {
+        worker(i)
+    })
+}
+```
+
+### Rate Limiting
+
+Rate limiting is an important mechanism for controlling resource utilization and maintaining quality of service. Go elegantly supports rate limiting with goroutines, channels, and tickers.
+
+```go
+requests := make(chan int, 5)
+for i := 1; i <= 5; i++ {
+    requests <- i
+}
+close(requests)
+limiter := time.Tick(200 * time.Millisecond)
+for req := range requests {
+    <-limiter
+    fmt.Println("request", req, time.Now())
+}
+```
+
 ### Fan-Out Pattern
 
 The fan-out pattern distributes work across multiple goroutines to process tasks concurrently, then gathers (fans-in) the results. This pattern is useful for parallelizing CPU-intensive operations.
@@ -2049,6 +2138,8 @@ type error interface {
     Error() string
 }
 ```
+
+**errors.As** - It checks that a given error (or any error in its chain) matches a specific error type and converts to a value of that type, returning true. If there's no match, it returns false.
 
 ### Error Handling Options
 
@@ -2155,48 +2246,32 @@ func main() {
 Built-in function to regain control of panicking goroutine. Only useful in **deferred** functions.
 
 ```go
-func main() {
-    f()
-    fmt.Println("Returned normally from f.")
+package main
+
+import "fmt"
+
+func mayPanic() {
+    panic("a problem")
 }
 
-func f() {
+func main() {
+
     defer func() {
         if r := recover(); r != nil {
-            fmt.Println("Recovered in f", r)
+
+            fmt.Println("Recovered. Error:\n", r)
         }
     }()
-    
-    fmt.Println("Calling g.")
-    g(0)
-    fmt.Println("Returned normally from g.")
-}
 
-func g(i int) {
-    if i > 3 {
-        fmt.Println("Panicking!")
-        panic(fmt.Sprintf("%v", i))
-    }
-    defer fmt.Println("Defer in g", i)
-    fmt.Println("Printing in g", i)
-    g(i + 1)
+    mayPanic()
+
+    fmt.Println("After mayPanic()")
 }
 ```
-
-Output:
-```
-Calling g.
-Printing in g 0
-Printing in g 1
-Printing in g 2
-Printing in g 3
-Panicking!
-Defer in g 3
-Defer in g 2
-Defer in g 1
-Defer in g 0
-Recovered in f 4
-Returned normally from f.
+```sh
+$ go run recover.go
+Recovered. Error:
+ a problem
 ```
 
 ---
@@ -2365,10 +2440,12 @@ math.MinInt64      // -9,223,372,036,854,775,808
 
 ```go
 strings.Split(s, " ")      // Split string
-strings.Fields(s)          // Split on whitespace
+strings.Fields(s)          // Split on whitespace (handles multiple spaces)
 strings.Join(slice, " ")   // Join with separator
 strings.Index(s, substr)   // Find substring
 ```
+
+> **Printf vs Sprintf**: Printf prints the formatted string to os.Stdout. Sprintf formats and returns a string without printing it anywhere.
 
 ### Init Function
 
@@ -2401,13 +2478,6 @@ func init() {
 | Unicode | Universal character catalog | Unique number for every character/emoji/symbol |
 | UTF-8 | Smart storage method | Variable 1-4 bytes per character |
 
-### SHA256 Checksum
-- To check that what was received is what was intended. shasum -a 256 path/to/file 24325uib3654356rhrh897r8h78rthrthr
-Verify file integrity:
-```bash
-shasum -a 256 path/to/file
-```
-
 ### Character Increment
 
 ```go
@@ -2429,6 +2499,28 @@ godoc -http :8080  # Run local doc server
 ```
 
 Comments above functions generate documentation. Also use `doc.go` files.
+
+### Sorting
+
+```go
+strs := []string{"c", "a", "b"}
+slices.Sort(strs) // Strings: [a b c]
+```
+
+#### Sorting by Functions
+
+Sometimes we'll want to sort a collection by something other than its natural order. For example, suppose we wanted to sort strings by their length instead of alphabetically. Here's an example of custom sorts in Go.
+
+```go
+fruits := []string{"peach", "banana", "kiwi"}
+
+lenCmp := func(a, b string) int {
+    return cmp.Compare(len(a), len(b))
+}
+
+slices.SortFunc(fruits, lenCmp)
+fmt.Println(fruits) // [kiwi peach banana]
+```
 
 ### Stringer Interface
 
@@ -2542,6 +2634,438 @@ Go is a modern, statically-typed language designed for:
 - Explicit over implicit
 - Concurrency is not parallelism
 - Don't communicate by sharing memory; share memory by communicating
+
+### Command-Line Arguments
+
+Command-line arguments are a common way to parameterize execution of programs. For example, `go run hello.go` uses run and hello.go arguments to the go program.
+
+```go
+argsWithProg := os.Args // os.Args provides access to raw command-line arguments. Note that the first value in this slice is the path to the program.
+argsWithoutProg := os.Args[1:] // holds the arguments to the program
+```
+```sh
+$ go build command-line-arguments.go
+$ ./command-line-arguments a b c d
+[./command-line-arguments a b c d]       
+[a b c d]
+```
+
+### Command-Line Flags
+
+Command-line flags are a common way to specify options for command-line programs. For example, in `wc -l` the `-l` is a command-line flag.
+
+```go
+wordPtr := flag.String("word", "foo", "a string") // string flag word with a default value "foo" and a short description.
+
+numbPtr := flag.Int("numb", 42, "an int")
+forkPtr := flag.Bool("fork", false, "a bool")
+
+var svar string
+flag.StringVar(&svar, "svar", "bar", "a string var")
+
+flag.Parse() // to execute the command-line parsing.
+
+fmt.Println("word:", *wordPtr)
+fmt.Println("numb:", *numbPtr)
+fmt.Println("fork:", *forkPtr)
+fmt.Println("svar:", svar)
+fmt.Println("tail:", flag.Args())
+
+// Command-Line Subcommands
+fooCmd := flag.NewFlagSet("foo", flag.ExitOnError)
+fooEnable := fooCmd.Bool("enable", false, "enable")
+```
+```sh
+$ ./command-line-flags -word=opt -numb=7 -fork -svar=flag a1 a2 # Trailing positional arguments can be provided after any flags.
+word: opt
+numb: 7
+fork: true
+svar: flag
+tail: [a1, a2]
+
+$ ./command-line-subcommands foo -enable a1 a2 -name=joe # flag package requires all flags to appear before positional arguments (otherwise the flags will be interpreted as positional arguments).
+subcommand 'foo'
+  enable: true
+  tail: [a1 a2 -name=joe]
+```
+
+### Environment Variables
+
+Environment variables are a universal mechanism for conveying configuration information to Unix programs. Let's look at how to set, get, and list environment variables.
+
+```go
+os.Setenv("FOO", "1")
+fmt.Println("FOO:", os.Getenv("FOO"))
+fmt.Println("BAR:", os.Getenv("BAR")) // This will return an empty string if the key isn't present in the environment.
+
+fmt.Println()
+for _, e := range os.Environ() { // list all key/value pairs in the environment. This returns a slice of strings in the form KEY=value.
+    pair := strings.SplitN(e, "=", 2)
+    fmt.Println(pair[0])
+}
+```
+
+### URL Parsing
+
+```go
+s := "http://admin:secret@example.com:8080/x/?abc=xyz#top"
+
+u, err := url.Parse(s)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println("Scheme:", u.Scheme)
+fmt.Println("User:", u.User)
+fmt.Println("Username:", u.User.Username())
+p, _ := u.User.Password()
+fmt.Println("Password:", p)
+
+fmt.Println("Host (Full):", u.Host)
+host, port, _ := net.SplitHostPort(u.Host)
+fmt.Println("Split Host:", host)
+fmt.Println("Split Port:", port)
+
+fmt.Println("Path:", u.Path)
+fmt.Println("Fragment:", u.Fragment) // The part after '#'
+
+fmt.Println("RawQuery:", u.RawQuery)
+m, _ := url.ParseQuery(u.RawQuery)
+fmt.Println("Query Map:", m)
+fmt.Println("Value of abc:", m["abc"][0])
+```
+
+### Base64 Encoding
+
+Go provides built-in support for base64 encoding/decoding.
+
+```go
+data := "abc123!?$*&()'-=@~"
+sEnc := base64.StdEncoding.EncodeToString([]byte(data)) // YWJjMTIzIT8kKiYoKSctPUB+
+sDec, _ := base64.StdEncoding.DecodeString(sEnc) // abc123!?$*&()'-=@~
+
+uEnc := base64.URLEncoding.EncodeToString([]byte(data)) // YWJjMTIzIT8kKiYoKSctPUB-
+uDec, _ := base64.URLEncoding.DecodeString(uEnc) // abc123!?$*&()'-=@~
+```
+
+### SHA256 Hashes
+
+SHA256 hashes are frequently used to compute short identities for binary or text blobs. For example, TLS/SSL certificates use SHA256 to compute a certificate's signature. Here's how to compute SHA256 hashes in Go.
+
+```go
+s := "sha256 this string"
+h := sha256.New() // Think of h as a "digest machine" that is waiting to be fed data.
+h.Write([]byte(s)) // This feeds your data into the machine.
+bs := h.Sum(nil) // calculates the final checksum. // 1af1dfa857bf1d8814fe1af8983c18080019922e557f15a8a...
+```
+
+### Time
+
+```go
+now := time.Now() // prints the current time
+then := time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC) // building the time
+p(then.Year())
+p(then.Month())
+p(then.Day())
+p(then.Hour())
+p(then.Minute())
+p(then.Second())
+p(then.Nanosecond())
+p(then.Location())
+p(then.Weekday())
+p(then.Before(now)) // These methods compare two times, testing if the first occurs before, after, or at the same time as the second, respectively.
+p(then.After(now))
+p(then.Equal(now))
+now.Sub(then)
+```
+
+### Signals
+
+Sometimes we'd like our Go programs to intelligently handle Unix signals. For example, we might want a server to gracefully shutdown when it receives a SIGTERM, or a command-line tool to stop processing input if it receives a SIGINT. Here's how to handle signals in Go with channels.
+
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+    "os/signal"
+    "syscall"
+)
+
+func main() {
+
+    sigs := make(chan os.Signal, 1) // Go signal notification works by sending os.Signal values on a channel. We'll create a channel to receive these notifications. Note that this channel should be buffered.
+
+    signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+    done := make(chan bool, 1) // signal.Notify registers the given channel to receive notifications of the specified signals.
+
+    go func() {
+
+        sig := <-sigs
+        fmt.Println()
+        fmt.Println(sig)
+        done <- true
+    }()
+
+    fmt.Println("awaiting signal")
+    <-done
+    fmt.Println("exiting")
+}
+
+/*
+$ go run signals.go
+awaiting signal
+^C
+interrupt
+exiting
+*/
+```
+
+### JSON
+
+Only exported fields will be encoded/decoded in JSON. Fields must start with capital letters to be exported.
+
+```go
+strB, _ := json.Marshal("gopher")
+fmt.Println(string(strB)) // "gopher"
+
+
+str := `{"page": 1, "fruits": ["apple", "peach"]}`
+res := response2{}
+
+type response2 struct {
+    Page   int      `json:"page"`
+    Fruits []string `json:"fruits"`
+}
+
+res := response2{}
+str := `{"page": 1, "fruits": ["apple", "peach"]}`
+json.Unmarshal([]byte(str), &res) // parsing to a predefined struct
+
+// Encode directly to Standard Output
+enc := json.NewEncoder(os.Stdout)
+d := map[string]int{"apple": 5, "lettuce": 7}
+enc.Encode(d)
+
+// Decode directly from a Reader
+dec := json.NewDecoder(strings.NewReader(str))
+res1 := response2{}
+dec.Decode(&res1) // {1 [apple peach]}
+```
+
+### Templates
+
+Go offers built-in support for creating dynamic content or showing customized output to the user with the text/template package.
+
+Templates are a mix of static text and "actions" enclosed in {{...}} that are used to dynamically insert content.
+
+> Think of a Template as a letter with "blanks" to fill in. You write the text once, and then you "execute" it with different data to fill in the blanks.
+
+```go
+t1 := template.New("t1")
+t1, err := t1.Parse("Value: {{.}}\n")
+t1 = template.Must(t1.Parse("Value: {{.}}\n"))
+t1.Execute(os.Stdout, "some text") // Value: some text
+t1.Execute(os.Stdout, 5) // Value: 5
+
+Create := func(name, t string) *template.Template {
+    return template.Must(template.New(name).Parse(t))
+}
+
+// If the data is a struct we can use the {{.FieldName}} action to access its fields. The fields should be exported to be accessible when a template is executing.
+t2 := Create("t2", "Name: {{.Name}}\n")
+
+t2.Execute(os.Stdout, struct {
+    Name string
+}{"Jane Doe"})
+
+t2.Execute(os.Stdout, map[string]string{
+    "Name": "Mickey Mouse",
+})
+
+t3 := Create("t3",
+    "{{if . -}} yes {{else -}} no {{end}}\n") // Ends the code and deletes the whitespace/newline immediately following it.
+t3.Execute(os.Stdout, "not empty")
+t3.Execute(os.Stdout, "")
+
+t4 := Create("t4",
+    "Range: {{range .}}{{.}} {{end}}\n")
+t4.Execute(os.Stdout,
+    []string{
+        "Go",
+        "Rust",
+        "C++",
+        "C#",
+    })
+```
+
+### File I/O
+
+#### Reading Files
+
+```go
+path := filepath.Join(os.TempDir(), "dat")
+dat, err := os.ReadFile(path) // read entire file
+fmt.Print(string(dat)) // hello\n go\n
+
+f, err := os.Open(path)
+
+b1 := make([]byte, 5) // set 5 byte
+n1, err := f.Read(b1)
+fmt.Printf("%d bytes: %s\n", n1, string(b1[:n1])) // 5 bytes: hello
+
+o2, err := f.Seek(6, io.SeekStart) // You can also Seek to a known location in the file and Read from there.
+b2 := make([]byte, 2)
+n2, err := f.Read(b2)
+fmt.Printf("%d bytes @ %d: %v\n", n2, o2, string(b2[:n2])) // 2 bytes @ 6: go
+
+o3, err := f.Seek(6, io.SeekStart)
+b3 := make([]byte, 2)
+n3, err := io.ReadAtLeast(f, b3, 2)
+fmt.Printf("%d bytes @ %d: %s\n", n3, o3, string(b3)) // 2 bytes @ 6: go
+
+_, err = f.Seek(0, io.SeekStart) // There is no built-in rewind, but Seek(0, 0) accomplishes this.
+
+r4 := bufio.NewReader(f)
+b4, err := r4.Peek(5) // Peek returns the next n bytes without advancing the reader.
+fmt.Printf("5 bytes: %s\n", string(b4)) // 5 bytes: hello
+
+f.Close()
+```
+
+#### Writing Files
+
+```go
+d1 := []byte("hello\ngo\n")
+path1 := filepath.Join(os.TempDir(), "dat1")
+err := os.WriteFile(path1, d1, 0644) // 0644 represents the permission bits
+
+path2 := filepath.Join(os.TempDir(), "dat2")
+f, err := os.Create(path2)
+defer f.Close()
+
+d2 := []byte{115, 111, 109, 101, 10}
+n2, err := f.Write(d2)
+fmt.Printf("wrote %d bytes\n", n2) // wrote 5 bytes
+
+n3, err := f.WriteString("writes\n") // writes a string.
+fmt.Printf("wrote %d bytes\n", n3) // wrote 7 bytes
+
+// Issue a Sync to flush writes to stable storage.
+f.Sync()
+
+w := bufio.NewWriter(f)
+n4, err := w.WriteString("buffered\n")
+fmt.Printf("wrote %d bytes\n", n4) // wrote 9 bytes
+
+// Use Flush to ensure all buffered operations have been applied to the underlying writer.
+w.Flush()
+```
+
+### Directories
+
+```go
+err := os.Mkdir("subdir", 0755) // Create a new sub-directory.
+defer os.RemoveAll("subdir") // Defer removal of the directory tree (like `rm -rf`).
+
+err = os.MkdirAll("subdir/parent/child", 0755) // Create a hierarchy of directories (like `mkdir -p`).
+
+c, err := os.ReadDir("subdir/parent") // List directory contents.
+
+// Iterate over entries to print name and type.
+for _, entry := range c {
+    fmt.Println(" ", entry.Name(), entry.IsDir())
+}
+
+// Temp Directory
+f, err := os.CreateTemp("", "sample") // Create a temporary file.
+fmt.Println("Temp file name:", f.Name()) // Temp file name: /tmp/sample610887201
+defer os.Remove(f.Name()) // Clean up the file after we're done.
+
+dname, err := os.MkdirTemp("", "sampledir") // Temp Directory (Temp dir name: /tmp/sampledir898854668)
+defer os.RemoveAll(dname)
+
+// embed 
+//go:embed is a compiler directive that allows programs to include arbitrary files and folders in the Go binary at build time.
+// embed directives accept paths relative to the directory containing the Go source file. This directive embeds the contents of the file into the string variable immediately following it.
+
+//go:embed folder/single_file.txt
+var fileString string // hello go
+
+//go:embed folder/single_file.txt
+var fileByte []byte // hello go
+
+//go:embed folder/single_file.txt
+//go:embed folder/*.hash
+var folder embed.FS
+content1, _ := folder.ReadFile("folder/file1.hash")
+print(string(content1)) // hello go
+```
+
+### TCP Server
+
+```go
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "log"
+    "net"
+    "strings"
+)
+
+func main() {
+
+    listener, err := net.Listen("tcp", ":8090")
+    if err != nil {
+        log.Fatal("Error listening:", err)
+    }
+
+    defer listener.Close()
+
+    for {
+
+        conn, err := listener.Accept()
+        if err != nil {
+            log.Println("Error accepting conn:", err)
+            continue
+        }
+
+        go handleConnection(conn)
+    }
+}
+
+func handleConnection(conn net.Conn) {
+
+    defer conn.Close()
+
+    reader := bufio.NewReader(conn)
+    message, err := reader.ReadString('\n')
+    if err != nil {
+        log.Printf("Read error: %v", err)
+        return
+    }
+
+    ackMsg := strings.ToUpper(strings.TrimSpace(message))
+    response := fmt.Sprintf("ACK: %s\n", ackMsg)
+    _, err = conn.Write([]byte(response))
+    if err != nil {
+        log.Printf("Server write error: %v", err)
+    }
+}
+
+/*
+$ go run tcp-server.go &
+
+$ echo "Hello from netcat" | nc localhost 8090
+ACK: HELLO FROM NETCAT
+*/
+```
+
+---
 
 **Learn More:**
 - [Go Proverbs](https://go-proverbs.github.io/)
