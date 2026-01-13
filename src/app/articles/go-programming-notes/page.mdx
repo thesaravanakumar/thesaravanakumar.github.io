@@ -2863,10 +2863,9 @@ Templates are a mix of static text and "actions" enclosed in `{{...}}` that are 
 
 > Think of a Template as a letter with "blanks" to fill in. You write the text once, and then you "execute" it with different data to fill in the blanks.
 
-```go
-t1 := template.New("t1")
-t1, err := t1.Parse("Value: &#123;&#123;.&#125;&#125;\n")
-t1 = template.Must(t1.Parse("Value: &#123;&#123;.&#125;&#125;\n"))
+<pre><code className="language-go">{`t1 := template.New("t1")
+t1, err := t1.Parse("Value: {{.}}\\n")
+t1 = template.Must(t1.Parse("Value: {{.}}\\n"))
 t1.Execute(os.Stdout, "some text") // Value: some text
 t1.Execute(os.Stdout, 5) // Value: 5
 
@@ -2874,8 +2873,8 @@ Create := func(name, t string) *template.Template {
     return template.Must(template.New(name).Parse(t))
 }
 
-// If the data is a struct we can use the &#123;&#123;.FieldName&#125;&#125; action to access its fields. The fields should be exported to be accessible when a template is executing.
-t2 := Create("t2", "Name: &#123;&#123;.Name&#125;&#125;\n")
+// If the data is a struct we can use the {{.FieldName}} action to access its fields. The fields should be exported to be accessible when a template is executing.
+t2 := Create("t2", "Name: {{.Name}}\\n")
 
 t2.Execute(os.Stdout, struct {
     Name string
@@ -2885,11 +2884,11 @@ t2.Execute(os.Stdout, map[string]string{
     "Name": "Mickey Mouse",
 })
 
-t3 := Create("t3", "&#123;&#123;if . -&#125;&#125; yes &#123;&#123;else -&#125;&#125; no &#123;&#123;end&#125;&#125;\n") // Ends the code and deletes the whitespace/newline immediately following it.
+t3 := Create("t3", "{{if . -}} yes {{else -}} no {{end}}\\n") // Ends the code and deletes the whitespace/newline immediately following it.
 t3.Execute(os.Stdout, "not empty")
 t3.Execute(os.Stdout, "")
 
-t4 := Create("t4", "Range: &#123;&#123;range .&#125;&#125;&#123;&#123;.&#125;&#125; &#123;&#123;end&#125;&#125;\n")
+t4 := Create("t4", "Range: {{range .}}{{.}} {{end}}\\n")
 t4.Execute(os.Stdout,
     []string{
         "Go",
@@ -2897,7 +2896,7 @@ t4.Execute(os.Stdout,
         "C++",
         "C#",
     })
-```
+`}</code></pre>
 
 ### File I/O
 
