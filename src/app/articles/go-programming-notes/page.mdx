@@ -2863,7 +2863,7 @@ Templates are a mix of static text and "actions" enclosed in `{{...}}` that are 
 
 > Think of a Template as a letter with "blanks" to fill in. You write the text once, and then you "execute" it with different data to fill in the blanks.
 
-````go
+```go
 t1 := template.New("t1")
 t1, err := t1.Parse("Value: {{.}}\n")
 t1 = template.Must(t1.Parse("Value: {{.}}\n"))
@@ -2897,7 +2897,7 @@ t4.Execute(os.Stdout,
         "C++",
         "C#",
     })
-````
+```
 
 ### File I/O
 
