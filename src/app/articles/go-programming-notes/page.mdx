@@ -3,6 +3,7 @@ import meta from '@/utils/meta'
 
 import img1 from './1.png'
 import img2 from './2.png'
+import img3 from './2.png'
 
 export const article = {
   title: 'Go Programming Notes',
@@ -1275,67 +1276,65 @@ func main() {
 
 ---
 
+
 ## Interfaces
 
-### Interface Basics
+### Interface Basics & Implicit Implementation
+
+> Go uses **duck typing**: "If it walks like a duck and quacks like a duck, it's a duck."
+
+In the example below, we have a `gasEngine` and an `electricEngine`. They work differently internally, but they share a common behavior: calculating how many miles are left.
+
+Because both structs have the `milesLeft()` method, they automatically implement the `engine` interface.
 
 ```go
-type I interface {
-    M()
+package main
+
+import "fmt"
+
+// 1. Define the Interface (The Contract)
+type engine interface {
+    milesLeft() uint8
 }
 
-type T struct {
-    S string
+// 2. Define the Concrete Types
+type gasEngine struct {
+    mpg     uint8
+    gallons uint8
 }
 
-// This method means T implements interface I
-// No explicit declaration needed!
-func (t T) M() {
-    fmt.Println(t.S)
+type electricEngine struct {
+    mpkwh uint8
+    kwh   uint8
+}
+
+// 3. Implement the methods (implicitly satisfying the interface)
+func (e gasEngine) milesLeft() uint8 {
+    return e.gallons * e.mpg
+}
+
+func (e electricEngine) milesLeft() uint8 {
+    return e.kwh * e.mpkwh
+}
+
+// 4. Use the Interface (Polymorphism)
+// This function accepts ANY struct that satisfies the 'engine' interface
+func canMakeIt(e engine, miles uint8) {
+    if miles <= e.milesLeft() {
+        fmt.Println("You can make it there!")
+    } else {
+        fmt.Println("Need to fuel up first!")
+    }
 }
 
 func main() {
-    var i I = T{"hello"}
-    i.M()
-}
-```
-
-### Implicit Implementation
-
-Go uses **duck typing**: "If it walks like a duck and quacks like a duck, it's a duck."
-
-```go
-type Shape interface {
-    Area() float64
-}
-
-type Circle struct {
-    Radius float64
-}
-
-func (c Circle) Area() float64 {
-    return math.Pi * c.Radius * c.Radius
-}
-
-type Rectangle struct {
-    Width, Height float64
-}
-
-func (r Rectangle) Area() float64 {
-    return r.Width * r.Height
-}
-
-// Polymorphism: accepts any type with Area() method
-func printShapeInfo(s Shape) {
-    fmt.Printf("The area is %f\n", s.Area())
-}
-
-func main() {
-    c := Circle{Radius: 10}
-    r := Rectangle{Width: 5, Height: 4}
+    // Create a specific type (electricEngine)
+    var myEngine electricEngine = electricEngine{25, 15}
     
-    printShapeInfo(c)  // Works!
-    printShapeInfo(r)  // Works!
+    // Pass it to a function expecting an 'engine' interface
+    canMakeIt(myEngine, 50)
+    
+    // We could also pass a gasEngine here and it would work the same way!
 }
 ```
 
@@ -1385,49 +1384,14 @@ func main() {
 
 Think of an interface like a USB-C port on your laptop. The port doesn't care if you're plugging in a phone, tablet, or headphones - as long as the device has a USB-C connector, it will work.
 
-```go
-// The interface (the USB-C port contract)
-type Speaker interface {
-    Speak() string
-}
-
-// Dog implements Speaker
-type Dog struct{}
-
-func (d Dog) Speak() string {
-    return "Woof!"
-}
-
-// Cat implements Speaker
-type Cat struct{}
-
-func (c Cat) Speak() string {
-    return "Meow!"
-}
-
-// This function is polymorphic - it works with ANY type that implements Speaker
-func MakeSound(s Speaker) {
-    fmt.Println(s.Speak())
-}
-
-func main() {
-    dog := Dog{}
-    cat := Cat{}
-    
-    // Same function works with different types!
-    MakeSound(dog)  // Prints: Woof!
-    MakeSound(cat)  // Prints: Meow!
-}
-```
-
 **How Go's Compiler Checks Interfaces (Duck Typing):**
 
-When Go sees `MakeSound(dog)`:
-1. "The `MakeSound` function needs a `Speaker`."
-2. "The contract for `Speaker` is a method called `Speak() string`."
-3. "I'm being given a variable `dog` of type `Dog`."
-4. "Let me check the `Dog` type... Does it have a method called `Speak() string`? ...Yes, it does!"
-5. "Great. That means `Dog` implicitly implements `Speaker`. The code is valid."
+When Go sees `canMakeIt(myEngine)`:
+1. "The `canMakeIt` function needs an `engine`."
+2. "The contract for `engine` is a method called `milesLeft() uint8`."
+3. "I'm being given a variable `myEngine` of type `electricEngine`."
+4. "Let me check the `electricEngine` type... Does it have a method called `milesLeft() uint8`? ...Yes, it does!"
+5. "Great. That means `electricEngine` implicitly implements `engine`. The code is valid."
 
 > **Key Point:** In Go, you don't declare that you are fulfilling a contract. You simply prove it by having the right methods. If you have the methods, you implement the interface automatically.
 
@@ -1664,6 +1628,11 @@ func main() {
 
 ### Concurrency vs Parallelism
 
+<div style={{ textAlign: 'center' }}>
+  <img src={img3.src} alt="Go notes diagram 3" style={{ maxWidth: '100%', height: 'auto' }} />
+</div>
+
+
 **Concurrency:**
 - Design pattern for code that can execute multiple tasks independently
 - Potential for simultaneous execution
@@ -1679,6 +1648,14 @@ func main() {
 - One task at a time in predefined order
 
 ### Goroutines & WaitGroups
+
+| **Goroutine**                   | **Thread**                 |
+|:-------------------------------:|:--------------------------:|
+| Managed by Go runtime           | Managed by OS Kernal       |
+| 2KB                             | 1MB                        |
+| Abstraction of an actual thread | Hardware Dependent         |
+| cheap, lightweight and fast     | Higher cost and start time |
+
 
 Goroutines are lightweight threads managed by the Go runtime. A `WaitGroup` is used to wait for a collection of goroutines to finish executing.
 
@@ -2309,9 +2286,34 @@ exit status 1
 FAIL    test    4.616s
 ```
 
+### Subtests
+- Use t.Run to create hierarchical tests.
+- Allows you to group related tests and share setup code.
+- Enables running specific subtests via command line flags (e.g., go test -run TestSum/Negative).
+
+```go
+func TestSum(t *testing.T) {
+    // Subtest 1: +ve numbers
+    t.Run("Positive", func(t *testing.T) {
+        if sum(2, 3) != 5 {
+            t.Error("Expected 5")
+        }
+    })
+
+    // Subtest 2: -ve numbers
+    t.Run("Negative", func(t *testing.T) {
+        if sum(-1, -2) != -3 {
+            t.Error("Expected -3")
+        }
+    })
+}
+```
+
 ### Table-Driven Tests
 
-The idiomatic way to test multiple cases:
+- The idiomatic way to test multiple cases.
+- low overhead to add more test cases.
+- Do this pattern a lot. Follow pattern even for single cases, if its possible to grow.
 
 ```go
 type testcase struct {
